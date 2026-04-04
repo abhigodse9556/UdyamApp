@@ -39,12 +39,20 @@ const Profile = () => {
         <ParallaxScrollView
           headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
           headerImage={
-            <IconSymbol
-              size={310}
-              color="#808080"
-              name="chevron.left.forwardslash.chevron.right"
-              style={styles.headerImage}
-            />
+            <View>
+              <IconSymbol
+                size={230}
+                name="shopping-store"
+                type="Fontisto"
+                style={styles.headerImage1}
+              />
+              <IconSymbol
+                size={100}
+                name="walking"
+                type="FontAwesome5"
+                style={styles.headerImage2}
+              />
+            </View>
           }
         >
           <ThemedView style={styles.titleContainer}>
@@ -131,10 +139,15 @@ const Profile = () => {
 };
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: "#808080",
-    bottom: -90,
-    left: -35,
+  headerImage1: {
+    color: "#6a6a6a",
+    right: 10,
+    position: "absolute",
+  },
+  headerImage2: {
+    color: "#6a6a6a",
+    top: 150,
+    left: 35,
     position: "absolute",
   },
   titleContainer: {

@@ -22,7 +22,12 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <IconSymbol
+              size={28}
+              name="home"
+              type="MaterialIcons"
+              color={color}
+            />
           ),
         }}
       />
@@ -31,7 +36,12 @@ export default function TabLayout() {
         options={{
           title: "Explore",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <IconSymbol
+              size={28}
+              name="send"
+              type="MaterialIcons"
+              color={color}
+            />
           ),
         }}
       />
@@ -40,7 +50,12 @@ export default function TabLayout() {
         options={{
           title: "Home New",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <IconSymbol
+              size={28}
+              name="home"
+              type="MaterialIcons"
+              color={color}
+            />
           ),
         }}
       />
@@ -49,7 +64,7 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <IconSymbol size={26} name="user" type="Entypo" color={color} />
           ),
         }}
       />
