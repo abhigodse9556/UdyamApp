@@ -1,10 +1,50 @@
-# UdyamApp
-UdyamApp is a mobile app for simple inventory management and billing. It helps businesses manage products, track stock, and generate invoices on the go. Designed to be lightweight and scalable, with future scope for analytics, cloud sync, and more features.
+# Welcome to your Expo app 👋
 
-UdyamApp is a mobile application focused on simplifying inventory management and billing for small and medium-sized businesses. The app aims to provide an intuitive and efficient way to manage products, track stock levels, and generate invoices on the go.
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-With a mobile-first approach, UdyamApp enables business owners to handle day-to-day operations directly from their devices—reducing manual work and improving accuracy. Core features include adding and managing products, monitoring inventory, creating and sharing invoices, and maintaining basic sales records.
+## Get started
 
-The project is designed with scalability in mind. While the initial version focuses on essential inventory and billing functionalities, the architecture allows for future enhancements such as cloud sync, multi-device access, analytics, customer management, and integrations with external services.
+1. Install dependencies
 
-UdyamApp is built to be lightweight, user-friendly, and practical for real-world usage, especially for local businesses looking for a simple yet powerful digital solution.
+   ```bash
+   npm install
+   ```
+
+2. Start the app
+
+   ```bash
+   npx expo start
+   ```
+
+In the output, you'll find options to open the app in a
+
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Get a fresh project
+
+When you're ready, run:
+
+```bash
+npm run reset-project
+```
+
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+
+## Learn more
+
+To learn more about developing your project with Expo, look at the following resources:
+
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+
+## Join the community
+
+Join our community of developers creating universal apps.
+
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
