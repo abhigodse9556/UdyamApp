@@ -46,14 +46,14 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="indexcopy"
+        name="product"
         options={{
-          title: "Home New",
+          title: "Products",
           tabBarIcon: ({ color }) => (
             <IconSymbol
               size={28}
-              name="home"
-              type="MaterialIcons"
+              name="product"
+              type="AntDesign"
               color={color}
             />
           ),

@@ -1,0 +1,41 @@
+import { Checkbox, CheckboxProps } from "expo-checkbox";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+type PropsType = CheckboxProps & {
+  label: string;
+};
+
+const ExpoCheckBox = (props: PropsType) => {
+  const { value, onValueChange, color, label } = props;
+  return (
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => onValueChange && onValueChange(!value)}
+      activeOpacity={0.7}
+    >
+      <View style={styles.section}>
+        <Checkbox
+          style={styles.checkbox}
+          value={value}
+          onValueChange={onValueChange}
+          color={color}
+        />
+        <Text style={styles.paragraph}>{label}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 0,
+    marginBottom: 16,
+  },
+  section: { flexDirection: "row", alignItems: "center" },
+  paragraph: { fontSize: 15 },
+  checkbox: { marginRight: 8 },
+});
+
+export default ExpoCheckBox;

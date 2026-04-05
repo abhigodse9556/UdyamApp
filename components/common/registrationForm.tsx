@@ -180,7 +180,6 @@ const RegistrationForm = ({
           title={isEditMode ? "Save Changes" : "Register"}
           onPress={() => handleRegister(isEditMode)}
           color="blue"
-          accessibilityLabel="Register your shop"
         />
         <Button
           title="Cancel"
@@ -197,7 +196,6 @@ const RegistrationForm = ({
             }
           }}
           color="black"
-          accessibilityLabel="Register your shop"
         />
       </View>
     </KeyboardAwareScrollView>

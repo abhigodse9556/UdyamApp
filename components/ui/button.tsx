@@ -1,29 +1,58 @@
 import React from "react";
-import { Button as NativeButton, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-type Props = {
+type ButtonProps = {
   title: string;
   onPress: () => void;
   color?: string;
-  accessibilityLabel?: string;
+  disabled?: boolean;
 };
 
-const Button = ({
-  title,
-  onPress,
-  color = "blue",
-  accessibilityLabel = "",
-}: Props) => {
+const Button = (props: ButtonProps) => {
+  const { title, onPress, color = "#2196F3", disabled = false } = props;
   return (
-    <View>
-      <NativeButton
-        title={title}
+    <View style={styles.container}>
+      {/* Custom TouchableOpacity Button */}
+      <TouchableOpacity
+        style={[
+          styles.customButton,
+          { backgroundColor: color, opacity: disabled ? 0.5 : 1 },
+        ]}
+        activeOpacity={0.7}
         onPress={onPress}
-        color={color}
-        accessibilityLabel={accessibilityLabel}
-      />
+        disabled={disabled}
+      >
+        <Text style={styles.customButtonText}>{title}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 0,
+    marginTop: 10,
+  },
+  customButton: {
+    backgroundColor: "#2196F3",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    elevation: 3, // Shadow for Android
+    shadowColor: "#000", // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  customButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+});
 
 export default Button;
