@@ -44,6 +44,8 @@ const ProductScreen = () => {
       if (updated) {
         fetchProducts();
       }
+      setIsEditMode(false);
+      setSelectedProduct(undefined);
       setShowProductForm(false);
     },
     [fetchProducts],

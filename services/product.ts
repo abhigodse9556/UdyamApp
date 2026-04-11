@@ -1,3 +1,4 @@
+import generateId from "@/utils/idGenerator";
 import { getItem, setItem } from "../utils/storage";
 
 const PRODUCT_KEY = "product";
@@ -15,7 +16,6 @@ export interface Product {
   createdAt?: string;
   updatedAt?: string;
   deleted?: boolean;
-  deletedAt?: string;
   category?: string;
   subCategory?: string;
   brand?: string;
@@ -37,6 +37,7 @@ export const saveProduct = async (data: Product) => {
   const timestamp = new Date().toISOString();
   const newProduct = {
     ...data,
+    id: generateId("P"),
     createdAt: timestamp,
     updatedAt: timestamp,
   };
@@ -85,7 +86,7 @@ export const deleteProduct = async (id: string) => {
 
   const updatedProducts = products.map((p: Product) =>
     p.id === id
-      ? { ...p, deleted: true, deletedAt: new Date().toISOString() }
+      ? { ...p, deleted: true, updatedAt: new Date().toISOString() }
       : p,
   );
 

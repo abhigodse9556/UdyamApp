@@ -32,20 +32,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol
-              size={28}
-              name="send"
-              type="MaterialIcons"
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="product"
         options={{
           title: "Products",
@@ -54,6 +40,20 @@ export default function TabLayout() {
               size={28}
               name="product"
               type="AntDesign"
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="customer"
+        options={{
+          title: "Customers",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol
+              size={24}
+              name="users-gear"
+              type="FontAwesome6"
               color={color}
             />
           ),

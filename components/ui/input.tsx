@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -14,8 +13,8 @@ type Props = TextInputProps & {
   required?: boolean;
   error?: string;
   touched?: boolean;
-  leftIcon?: keyof typeof Ionicons.glyphMap;
-  rightIcon?: keyof typeof Ionicons.glyphMap;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   onRightIconPress?: () => void;
 };
 
@@ -28,6 +27,7 @@ const Input = ({
   rightIcon,
   onRightIconPress,
   style,
+  editable = true,
   ...props
 }: Props) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -48,9 +48,12 @@ const Input = ({
           styles.inputContainer,
           isFocused && styles.focused,
           showError && styles.errorBorder,
+          editable
+            ? {}
+            : { backgroundColor: "#dfdfdf", borderColor: "#c3c3c3" },
         ]}
       >
-        {leftIcon && <Ionicons name={leftIcon} size={20} style={styles.icon} />}
+        {leftIcon}
 
         <TextInput
           {...props}
@@ -64,11 +67,12 @@ const Input = ({
             setIsFocused(false);
             props.onBlur?.(e);
           }}
+          editable={editable}
         />
 
         {rightIcon && (
           <TouchableOpacity onPress={onRightIconPress}>
-            <Ionicons name={rightIcon} size={20} style={styles.icon} />
+            {rightIcon}
           </TouchableOpacity>
         )}
       </View>
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#1a1a1a",
     borderRadius: 10,
     paddingHorizontal: 10,
     backgroundColor: "#fff",

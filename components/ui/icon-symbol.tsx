@@ -2,7 +2,9 @@ import {
   AntDesign,
   Entypo,
   FontAwesome5,
+  FontAwesome6,
   Fontisto,
+  Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
 import { OpaqueColorValue, StyleProp, TextStyle } from "react-native";
@@ -19,6 +21,8 @@ type EntypoIconName = React.ComponentProps<typeof Entypo>["name"];
 type AntDesignIconName = React.ComponentProps<typeof AntDesign>["name"];
 type FontistoIconName = React.ComponentProps<typeof Fontisto>["name"];
 type FontAwesome5IconName = React.ComponentProps<typeof FontAwesome5>["name"];
+type IoniconsIconName = React.ComponentProps<typeof Ionicons>["name"];
+type FontAwesome6IconName = React.ComponentProps<typeof FontAwesome6>["name"];
 
 type IconSymbolProps =
   | {
@@ -40,6 +44,14 @@ type IconSymbolProps =
   | {
       type: "FontAwesome5";
       name: FontAwesome5IconName;
+    }
+  | {
+      type: "Ionicons";
+      name: IoniconsIconName;
+    }
+  | {
+      type: "FontAwesome6";
+      name: FontAwesome6IconName;
     };
 
 type BaseProps = {
@@ -80,6 +92,21 @@ export function IconSymbol(props: IconSymbolProps & BaseProps) {
     case "FontAwesome5":
       return (
         <FontAwesome5
+          name={props.name}
+          size={size}
+          color={color}
+          style={style}
+        />
+      );
+
+    case "Ionicons":
+      return (
+        <Ionicons name={props.name} size={size} color={color} style={style} />
+      );
+
+    case "FontAwesome6":
+      return (
+        <FontAwesome6
           name={props.name}
           size={size}
           color={color}

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 
-import RegistrationForm from "@/components/common/registrationForm";
+import RegistrationForm from "@/components/forms/registrationForm";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";

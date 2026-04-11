@@ -28,6 +28,11 @@ const ProductForm = (props: ProductFormProps) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleOnBlur = (field: keyof Product) => {
+    setTouchedFields((prev) => ({ ...prev, [field]: true }));
+    validateForm();
+  };
+
   const validateForm = (): boolean => {
     const errors: Partial<Record<keyof Product, string>> = {};
     if (!formData.name) {
@@ -56,15 +61,9 @@ const ProductForm = (props: ProductFormProps) => {
     return Object.keys(errors).length === 0;
   };
 
-  const generateId = () => {
-    const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substr(2, 5);
-    return `UAP-${timestamp}_${randomString}`;
-  };
-
   const handleSubmit = useCallback(async () => {
     if (!isEditMode) {
-      await saveProduct({ ...formData, id: generateId() } as Product);
+      await saveProduct(formData as Product);
       setFormData({} as Product);
     } else {
       await updateProduct(formData);
@@ -103,7 +102,7 @@ const ProductForm = (props: ProductFormProps) => {
           onChangeText={(value) => handleInputChange("name", value)}
           error={errorState.name}
           touched={touchedFields.name}
-          onBlur={() => setTouchedFields((prev) => ({ ...prev, name: true }))}
+          onBlur={() => handleOnBlur("name")}
         />
         <Input
           label="Cost Price"
@@ -114,10 +113,7 @@ const ProductForm = (props: ProductFormProps) => {
           }
           error={errorState.costPrice}
           touched={touchedFields.costPrice}
-          onBlur={() => {
-            setTouchedFields((prev) => ({ ...prev, costPrice: true }));
-            validateForm();
-          }}
+          onBlur={() => handleOnBlur("costPrice")}
           keyboardType="number-pad"
         />
         <Input
@@ -129,10 +125,7 @@ const ProductForm = (props: ProductFormProps) => {
           }
           error={errorState.mrp}
           touched={touchedFields.mrp}
-          onBlur={() => {
-            setTouchedFields((prev) => ({ ...prev, mrp: true }));
-            validateForm();
-          }}
+          onBlur={() => handleOnBlur("mrp")}
           keyboardType="number-pad"
         />
         <ExpoCheckBox
@@ -154,10 +147,7 @@ const ProductForm = (props: ProductFormProps) => {
           }
           error={errorState.rate}
           touched={touchedFields.rate}
-          onBlur={() => {
-            setTouchedFields((prev) => ({ ...prev, rate: true }));
-            validateForm();
-          }}
+          onBlur={() => handleOnBlur("rate")}
           editable={!formData.alwaysSellOnMrp}
           keyboardType="number-pad"
         />
@@ -274,11 +264,8 @@ const ProductForm = (props: ProductFormProps) => {
       <View style={styles.btnContainer}>
         <Button
           title={isEditMode ? "Update Product" : "Save Product"}
-          onPress={() => {
-            if (validateForm()) {
-              handleSubmit();
-            }
-          }}
+          onPress={() => handleSubmit()}
+          disabled={!validateForm()}
         />
         <Button
           title="Cancel"

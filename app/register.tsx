@@ -1,4 +1,4 @@
-import RegistrationForm from "@/components/common/registrationForm";
+import RegistrationForm from "@/components/forms/registrationForm";
 import { Text } from "@react-navigation/elements";
 import { StyleSheet, View } from "react-native";
 
