@@ -33,11 +33,11 @@ export interface Product {
 // Save product (only one)
 export const saveProduct = async (data: Product) => {
   const existingProducts = (await getItem(PRODUCT_KEY)) || [];
-
+  const id = await generateId("PRODUCT_ID_SEQ", "P");
   const timestamp = new Date().toISOString();
   const newProduct = {
     ...data,
-    id: generateId("P"),
+    id,
     createdAt: timestamp,
     updatedAt: timestamp,
   };
@@ -96,6 +96,7 @@ export const deleteProduct = async (id: string) => {
 // Clear all products (optional)
 export const clearAllProducts = async () => {
   await setItem(PRODUCT_KEY, null);
+  await setItem("PRODUCT_ID_SEQ", 0); // Reset ID sequence
 };
 
 export default {

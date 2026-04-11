@@ -1,7 +1,8 @@
-const generateId = (entityInitial: string) => {
-  const timestamp = Date.now();
-  const randomString = Math.random().toString(36).substr(2, 5);
-  return `UA${entityInitial}-${timestamp}_${randomString}`;
+import { getNextSequence } from "./storage";
+
+const generateId = async (ID_SEQ_KEY: string, entityInitial: string) => {
+  const idSeq = await getNextSequence(ID_SEQ_KEY);
+  return `UA-${idSeq}${entityInitial}`;
 };
 
 export default generateId;

@@ -25,3 +25,16 @@ export const removeItem = async (key: string) => {
     console.error("Storage removeItem error:", error);
   }
 };
+
+export const getNextSequence = async (ID_SEQ_KEY: string): Promise<number> => {
+  try {
+    const current = await AsyncStorage.getItem(ID_SEQ_KEY);
+    const next = current ? parseInt(current, 10) + 1 : 1;
+
+    await AsyncStorage.setItem(ID_SEQ_KEY, next.toString());
+    return next;
+  } catch (error) {
+    console.error("Sequence generation error:", error);
+    return Date.now();
+  }
+};

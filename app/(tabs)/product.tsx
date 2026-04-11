@@ -1,6 +1,6 @@
 import ProductForm from "@/components/forms/productForm";
 import Button from "@/components/ui/button";
-import { getAllProducts, Product } from "@/services/product";
+import { clearAllProducts, getAllProducts, Product } from "@/services/product";
 import { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
@@ -27,7 +27,7 @@ const ProductScreen = () => {
         setShowProductForm(true);
       }}
     >
-      {/* <Text style={styles.prodListContentText}>{item.id}</Text> */}
+      <Text style={styles.prodListContentText}>{item.id}</Text>
       <Text style={[styles.prodListContentText, { flex: 1 }]}>{item.name}</Text>
       <Text style={styles.prodListContentText}>{item.rate}</Text>
       <Text style={styles.prodListContentText}>{item.stock}</Text>
@@ -76,7 +76,7 @@ const ProductScreen = () => {
                     styles.prodListItemContainerHeader,
                   ]}
                 >
-                  {/* <Text style={styles.prodListHeaderText}>ID</Text> */}
+                  <Text style={styles.prodListHeaderText}>ID</Text>
                   <Text style={[styles.prodListHeaderText, { flex: 1 }]}>
                     Name
                   </Text>
@@ -100,11 +100,21 @@ const ProductScreen = () => {
               ListFooterComponent={() => <></>}
             />
           </View>
-          <View style={styles.buttonContainer}>
+          <View
+            style={[
+              styles.buttonContainer,
+              { display: products.length > 0 ? "flex" : "none" },
+            ]}
+          >
             <Button
               title="Add Product"
               onPress={() => setShowProductForm(true)}
               color="green"
+            />
+            <Button
+              title="Clear All Products"
+              onPress={() => clearAllProducts().then(() => fetchProducts())}
+              color="red"
             />
           </View>
         </View>
@@ -185,6 +195,9 @@ const styles = StyleSheet.create({
   buttonContainer: {
     padding: 12,
     alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    flexDirection: "row",
   },
 });
 

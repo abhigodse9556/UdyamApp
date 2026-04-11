@@ -156,6 +156,7 @@ const CustomerForm = ({
                 touched={touchedFields.email}
                 autoCapitalize="none"
                 error={errorState.email}
+                keyboardType="email-address"
               />
               <Input
                 label="Phone"

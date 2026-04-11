@@ -31,7 +31,7 @@ const CustomerScreen = () => {
         setShowCustomerForm(true);
       }}
     >
-      {/* <Text style={styles.custListContentText}>{item.id}</Text> */}
+      <Text style={[styles.custListContentText, { width: 60 }]}>{item.id}</Text>
       <Text style={[styles.custListContentText, { flex: 1 }]}>{item.name}</Text>
       <Text style={styles.custListContentText}>{item.phone}</Text>
       <Text style={styles.custListContentText}>{item.address}</Text>
@@ -82,7 +82,9 @@ const CustomerScreen = () => {
                     styles.custListItemContainerHeader,
                   ]}
                 >
-                  {/* <Text style={styles.custListHeaderText}>ID</Text> */}
+                  <Text style={[styles.custListHeaderText, { width: 60 }]}>
+                    ID
+                  </Text>
                   <Text style={[styles.custListHeaderText, { flex: 1 }]}>
                     Name
                   </Text>
@@ -188,14 +190,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#555",
-    width: 120,
+    width: 100,
     margin: 0,
     padding: 4,
   },
   custListContentText: {
     fontSize: 16,
     fontWeight: "bold",
-    width: 120,
+    width: 100,
     margin: 0,
     padding: 4,
     textOverflow: "wrap",

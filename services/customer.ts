@@ -48,13 +48,15 @@ export interface Customer {
 export const saveCustomer = async (data: Customer) => {
   const existingCustomers = (await getItem(CUSTOMER_KEY)) || [];
 
+  const id = await generateId("CUSTOMER_ID_SEQ", "C");
+
   const timestamp = new Date().toISOString();
   const newCustomer = {
     ...data,
     customerType: data.customerType || "walkin",
     isReferee: data.isReferee || false,
     deleted: data.deleted || false,
-    id: generateId("C"),
+    id,
     createdAt: timestamp,
     updatedAt: timestamp,
   };
@@ -166,6 +168,7 @@ export const deleteCustomer = async (id: string) => {
 // Clear all products (optional)
 export const clearAllCustomers = async () => {
   await setItem(CUSTOMER_KEY, null);
+  await setItem("CUSTOMER_ID_SEQ", 0); // Reset ID sequence
 };
 
 export default {
