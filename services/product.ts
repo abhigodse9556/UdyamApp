@@ -28,8 +28,9 @@ export interface Product {
   height?: string;
   alwaysSellOnMrp?: boolean;
   allowDiscount?: boolean;
+  taxRate?: number;
+  hsnCode?: string;
 }
-
 // Save product (only one)
 export const saveProduct = async (data: Product) => {
   const existingProducts = (await getItem(PRODUCT_KEY)) || [];
@@ -59,12 +60,12 @@ export const getProductById = async (id: string): Promise<Product | null> => {
 
 export const getProductsByName = async (
   name: string,
-): Promise<Product[] | null> => {
+): Promise<Product[] | []> => {
   const products = await getAllProducts();
   return (
     products?.filter((p) =>
       p.name.toLowerCase().includes(name.toLowerCase()),
-    ) || null
+    ) || []
   );
 };
 
@@ -102,6 +103,8 @@ export const clearAllProducts = async () => {
 export default {
   saveProduct,
   getAllProducts,
+  getProductById,
+  getProductsByName,
   updateProduct,
   deleteProduct,
   clearAllProducts,

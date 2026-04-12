@@ -15,7 +15,7 @@ import {
 } from "../../services/customer";
 import ExpoCheckBox from "../ui/expoCheckbox";
 import { IconSymbol } from "../ui/icon-symbol";
-import SearchSelect from "../ui/SearchSelect";
+import SearchSelect from "../ui/searchSelect";
 import Select from "../ui/select";
 
 type CustomerFormProps = {
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    padding: 35,
+    padding: 15,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -353,6 +353,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     height: 300,
+    overflow: "visible",
   },
   modalText: {
     fontSize: 18,

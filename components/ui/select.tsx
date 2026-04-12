@@ -1,5 +1,6 @@
 import { Picker } from "@react-native-picker/picker";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { ThemedText } from "../themed-text";
 
 type selectPropTypes = {
   label?: string;
@@ -13,7 +14,16 @@ const Select = (props: selectPropTypes) => {
 
   return (
     <View style={{ marginBottom: 16 }}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && (
+        <ThemedText
+          type="defaultSemiBold"
+          lightColor="#000"
+          darkColor="#fff"
+          style={styles.label}
+        >
+          {label}
+        </ThemedText>
+      )}
 
       <Picker
         selectedValue={selectedValue}
@@ -35,8 +45,5 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 2,
     marginLeft: 4,
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
   },
 });

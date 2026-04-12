@@ -8,6 +8,7 @@ import {
 type Item = {
   label: string;
   value: string;
+  searchResult?: object;
 };
 
 type Props = {
@@ -95,7 +96,7 @@ const SearchSelect = ({
           debounce={400}
           loading={loading}
           useFilter={false} // IMPORTANT for API search :contentReference[oaicite:2]{index=2}
-          closeOnBlur={false}
+          closeOnBlur={true}
           initialValue={value || undefined}
           textInputProps={{
             placeholder: placeholder || "Search...",
@@ -115,6 +116,8 @@ const SearchSelect = ({
             nestedScrollEnabled: true,
           }}
           suggestionsListMaxHeight={200}
+          direction="down" // or "up" if you want it to open upwards
+          containerStyle={{ zIndex: 1000 }}
         />
       </View>
     </AutocompleteDropdownContextProvider>

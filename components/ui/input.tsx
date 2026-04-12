@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
   TextInput,
   TextInputProps,
   TouchableOpacity,
-  View,
 } from "react-native";
+import { ThemedText } from "../themed-text";
+import { ThemedView } from "../themed-view";
 
 type Props = TextInputProps & {
   label?: string;
@@ -16,9 +16,12 @@ type Props = TextInputProps & {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   onRightIconPress?: () => void;
+  outerContainerStyle?: object;
+  inputRef?: React.RefObject<TextInput | null>;
 };
 
 const Input = ({
+  inputRef,
   label,
   required,
   error,
@@ -28,6 +31,7 @@ const Input = ({
   onRightIconPress,
   style,
   editable = true,
+  outerContainerStyle = {},
   ...props
 }: Props) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -35,15 +39,28 @@ const Input = ({
   const showError = touched && !!error;
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={[styles.container, outerContainerStyle]}>
       {label && (
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text style={styles.label}>{label}</Text>
-          {required && <Text style={{ color: "red" }}> *</Text>}
-        </View>
+        <ThemedView
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "transparent",
+          }}
+        >
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#000"
+            darkColor="#fff"
+            style={styles.label}
+          >
+            {label}
+          </ThemedText>
+          {required && <ThemedText style={{ color: "red" }}> *</ThemedText>}
+        </ThemedView>
       )}
 
-      <View
+      <ThemedView
         style={[
           styles.inputContainer,
           isFocused && styles.focused,
@@ -57,6 +74,7 @@ const Input = ({
 
         <TextInput
           {...props}
+          ref={inputRef}
           style={[styles.input, style]}
           placeholderTextColor="#999"
           onFocus={(e) => {
@@ -75,10 +93,10 @@ const Input = ({
             {rightIcon}
           </TouchableOpacity>
         )}
-      </View>
+      </ThemedView>
 
-      {showError && <Text style={styles.errorText}>{error}</Text>}
-    </View>
+      {showError && <ThemedText style={styles.errorText}>{error}</ThemedText>}
+    </ThemedView>
   );
 };
 
@@ -86,14 +104,14 @@ export default Input;
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: 0,
+    backgroundColor: "transparent",
   },
   label: {
     marginBottom: 2,
     marginLeft: 4,
     fontSize: 16,
     fontWeight: "bold",
-    color: "#333",
   },
   inputContainer: {
     flexDirection: "row",

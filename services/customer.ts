@@ -42,6 +42,7 @@ export interface Customer {
   createdAt?: string;
   updatedAt?: string;
   deleted?: boolean;
+  balance?: number;
 }
 
 // Save product (only one)
@@ -131,12 +132,12 @@ export const getCustomerById = async (id: string): Promise<Customer | null> => {
 
 export const getCustomersByName = async (
   name: string,
-): Promise<Customer[] | null> => {
+): Promise<Customer[] | []> => {
   const products = await getAllCustomers();
   return (
     products?.filter(
       (c) => c.name.toLowerCase().includes(name.toLowerCase()) && !c.deleted,
-    ) || null
+    ) || []
   );
 };
 
@@ -174,6 +175,7 @@ export const clearAllCustomers = async () => {
 export default {
   saveCustomer,
   getAllCustomers,
+  getCustomersByName,
   updateCustomer,
   deleteCustomer,
   clearAllCustomers,

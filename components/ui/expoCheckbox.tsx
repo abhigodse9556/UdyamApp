@@ -1,5 +1,6 @@
 import { Checkbox, CheckboxProps } from "expo-checkbox";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { ThemedText } from "../themed-text";
 
 type PropsType = CheckboxProps & {
   label: string;
@@ -20,7 +21,14 @@ const ExpoCheckBox = (props: PropsType) => {
           onValueChange={onValueChange}
           color={color}
         />
-        <Text style={styles.paragraph}>{label}</Text>
+        <ThemedText
+          type="defaultSemiBold"
+          lightColor="#000"
+          darkColor="#fff"
+          style={styles.paragraph}
+        >
+          {label}
+        </ThemedText>
       </View>
     </TouchableOpacity>
   );
@@ -33,7 +41,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   section: { flexDirection: "row", alignItems: "center" },
-  paragraph: { fontSize: 15 },
+  paragraph: {},
   checkbox: { marginRight: 8 },
 });
 

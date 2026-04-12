@@ -1,9 +1,13 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import Button from "@/components/ui/button";
 import { getShopOwner } from "@/services/shopOwner";
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import ModalDrawer from "../../components/ui/modalDrawer";
+import SalesProvider from "../context/salesContext";
+import SalesBill from "../sales/salesBill";
 
 const SalesScreen = () => {
   const [shopData, setShopData] = useState({
@@ -13,6 +17,8 @@ const SalesScreen = () => {
     phone: "",
     address: "",
   });
+  const [openSalesBillModal, setOpenSalesBillModal] = useState(false);
+
   const fetchShopOwner = useCallback(async () => {
     const owner = await getShopOwner();
     setShopData({
@@ -26,38 +32,62 @@ const SalesScreen = () => {
   useEffect(() => {
     fetchShopOwner();
   }, [fetchShopOwner]);
+
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.mainContainer}>
-        <ThemedView
-          lightColor="#ffffff"
-          darkColor="#000000"
-          style={{ padding: 6 }}
-        >
+    <SalesProvider>
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.mainContainer}>
           <ThemedView
-            lightColor="#f0f0f0"
-            darkColor="#101010"
-            style={styles.headerContainer}
+            lightColor="#ffffff"
+            darkColor="#000000"
+            style={{ padding: 6 }}
           >
-            <ThemedText
-              lightColor="#000000"
-              darkColor="#ffffff"
-              style={{ fontWeight: "bold" }}
+            <ThemedView
+              lightColor="#f0f0f0"
+              darkColor="#101010"
+              style={styles.headerContainer}
             >
-              {shopData.shopName || "Your Shop Name"}
-            </ThemedText>
+              <ThemedText
+                lightColor="#000000"
+                darkColor="#ffffff"
+                style={{ fontWeight: "bold" }}
+              >
+                {shopData.shopName || "Your Shop Name"}
+              </ThemedText>
+            </ThemedView>
+            <ThemedView
+              lightColor="#f0f0f0"
+              darkColor="#101010"
+              style={styles.buttonContainer}
+            >
+              <Button
+                title="Create New Sales Bill"
+                onPress={() => setOpenSalesBillModal(true)}
+              />
+            </ThemedView>
           </ThemedView>
-        </ThemedView>
-      </SafeAreaView>
-    </SafeAreaProvider>
+          <ModalDrawer
+            isVisible={openSalesBillModal}
+            onClose={() => setOpenSalesBillModal(false)}
+            animationIn="slideInRight"
+            animationOut="slideOutRight"
+          >
+            <SalesBill setOpenSalesBillModal={setOpenSalesBillModal} />
+          </ModalDrawer>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </SalesProvider>
   );
 };
 
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    margin: 0,
+    padding: 0,
   },
   headerContainer: { padding: 6, borderRadius: 8 },
+  buttonContainer: { padding: 6, borderRadius: 8, marginTop: 6 },
 });
 
 export default SalesScreen;
