@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 import RegistrationForm from "@/components/forms/registrationForm";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
@@ -39,7 +39,7 @@ const Profile = () => {
         <ParallaxScrollView
           headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
           headerImage={
-            <View>
+            <ThemedView>
               <IconSymbol
                 size={230}
                 name="shopping-store"
@@ -52,7 +52,7 @@ const Profile = () => {
                 type="FontAwesome5"
                 style={styles.headerImage2}
               />
-            </View>
+            </ThemedView>
           }
         >
           <ThemedView style={styles.titleContainer}>
@@ -65,31 +65,39 @@ const Profile = () => {
               {formData.shopName}
             </ThemedText>
           </ThemedView>
-          <View style={styles.infoContainer}>
-            <View
+          <ThemedView style={styles.infoContainer}>
+            <ThemedView
               style={[
                 styles.infoLineContainer,
                 { backgroundColor: "#4e4e4e61", padding: 10, borderRadius: 8 },
               ]}
             >
-              <Text style={styles.infoLineTitle}>Shop Code:</Text>
-              <Text style={styles.infoLineValue}>{formData.id}</Text>
-            </View>
-            <View style={styles.infoLineContainer}>
-              <Text style={styles.infoLineTitle}>Owner:</Text>
-              <Text style={styles.infoLineValue}>{formData.name}</Text>
-            </View>
-            <View style={styles.infoLineContainer}>
-              <Text style={styles.infoLineTitle}>Phone:</Text>
-              <Text style={styles.infoLineValue}>{formData.phone}</Text>
-            </View>
-            <View style={styles.infoLineContainer}>
-              <Text style={styles.infoLineTitle}>Address:</Text>
-              <Text style={styles.infoLineValue}>{formData.address}</Text>
-            </View>
-          </View>
+              <ThemedText style={styles.infoLineTitle}>Shop Code:</ThemedText>
+              <ThemedText style={styles.infoLineValue}>
+                {formData.id}
+              </ThemedText>
+            </ThemedView>
+            <ThemedView style={styles.infoLineContainer}>
+              <ThemedText style={styles.infoLineTitle}>Owner:</ThemedText>
+              <ThemedText style={styles.infoLineValue}>
+                {formData.name}
+              </ThemedText>
+            </ThemedView>
+            <ThemedView style={styles.infoLineContainer}>
+              <ThemedText style={styles.infoLineTitle}>Phone:</ThemedText>
+              <ThemedText style={styles.infoLineValue}>
+                {formData.phone}
+              </ThemedText>
+            </ThemedView>
+            <ThemedView style={styles.infoLineContainer}>
+              <ThemedText style={styles.infoLineTitle}>Address:</ThemedText>
+              <ThemedText style={styles.infoLineValue}>
+                {formData.address}
+              </ThemedText>
+            </ThemedView>
+          </ThemedView>
 
-          <View style={styles.btnContainer}>
+          <ThemedView style={styles.btnContainer}>
             <Button
               title="Edit Profile"
               onPress={() => {
@@ -103,11 +111,11 @@ const Profile = () => {
               }}
               color="red"
             />
-          </View>
+          </ThemedView>
         </ParallaxScrollView>
       ) : (
-        <View style={styles.editContainer}>
-          <View
+        <ThemedView style={styles.editContainer}>
+          <ThemedView
             style={[
               styles.infoLineContainer,
               {
@@ -118,10 +126,10 @@ const Profile = () => {
               },
             ]}
           >
-            <Text style={[styles.infoLineValue, { color: "white" }]}>
+            <ThemedText style={[styles.infoLineValue, { color: "white" }]}>
               Edit Profile Info
-            </Text>
-          </View>
+            </ThemedText>
+          </ThemedView>
           <RegistrationForm
             registeredData={formData}
             isEditMode={true}
@@ -132,7 +140,7 @@ const Profile = () => {
               }
             }}
           />
-        </View>
+        </ThemedView>
       )}
     </>
   );
@@ -156,7 +164,6 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     marginBottom: 20,
-    backgroundColor: "#f0f0f0",
     padding: 15,
     borderRadius: 10,
   },

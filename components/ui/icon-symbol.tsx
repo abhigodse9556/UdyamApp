@@ -5,6 +5,7 @@ import {
   FontAwesome6,
   Fontisto,
   Ionicons,
+  MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
 import { OpaqueColorValue, StyleProp, TextStyle } from "react-native";
@@ -23,6 +24,9 @@ type FontistoIconName = React.ComponentProps<typeof Fontisto>["name"];
 type FontAwesome5IconName = React.ComponentProps<typeof FontAwesome5>["name"];
 type IoniconsIconName = React.ComponentProps<typeof Ionicons>["name"];
 type FontAwesome6IconName = React.ComponentProps<typeof FontAwesome6>["name"];
+type MaterialCommunityIconName = React.ComponentProps<
+  typeof MaterialCommunityIcons
+>["name"];
 
 type IconSymbolProps =
   | {
@@ -52,6 +56,10 @@ type IconSymbolProps =
   | {
       type: "FontAwesome6";
       name: FontAwesome6IconName;
+    }
+  | {
+      type: "MaterialCommunityIcons";
+      name: MaterialCommunityIconName;
     };
 
 type BaseProps = {
@@ -107,6 +115,16 @@ export function IconSymbol(props: IconSymbolProps & BaseProps) {
     case "FontAwesome6":
       return (
         <FontAwesome6
+          name={props.name}
+          size={size}
+          color={color}
+          style={style}
+        />
+      );
+
+    case "MaterialCommunityIcons":
+      return (
+        <MaterialCommunityIcons
           name={props.name}
           size={size}
           color={color}

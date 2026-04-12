@@ -1,5 +1,7 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { ThemedText } from "../themed-text";
+import { ThemedView } from "../themed-view";
 
 type ButtonProps = {
   title: string;
@@ -11,7 +13,7 @@ type ButtonProps = {
 const Button = (props: ButtonProps) => {
   const { title, onPress, color = "#2196F3", disabled = false } = props;
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       {/* Custom TouchableOpacity Button */}
       <TouchableOpacity
         style={[
@@ -22,9 +24,9 @@ const Button = (props: ButtonProps) => {
         onPress={onPress}
         disabled={disabled}
       >
-        <Text style={styles.customButtonText}>{title}</Text>
+        <ThemedText style={styles.customButtonText}>{title}</ThemedText>
       </TouchableOpacity>
-    </View>
+    </ThemedView>
   );
 };
 

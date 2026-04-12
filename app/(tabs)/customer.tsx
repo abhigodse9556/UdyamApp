@@ -1,4 +1,6 @@
 import CustomerForm from "@/components/forms/customerForm";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import {
   clearAllCustomers,
@@ -6,13 +8,8 @@ import {
   getAllCustomers,
 } from "@/services/customer";
 import { useCallback, useEffect, useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const CustomerScreen = () => {
   const [customers, setCustomers] = useState([] as Customer[]);
@@ -31,10 +28,34 @@ const CustomerScreen = () => {
         setShowCustomerForm(true);
       }}
     >
-      <Text style={[styles.custListContentText, { width: 60 }]}>{item.id}</Text>
-      <Text style={[styles.custListContentText, { flex: 1 }]}>{item.name}</Text>
-      <Text style={styles.custListContentText}>{item.phone}</Text>
-      <Text style={styles.custListContentText}>{item.address}</Text>
+      <ThemedText
+        lightColor="#000"
+        darkColor="#fff"
+        style={[styles.custListContentText, { width: 60 }]}
+      >
+        {item.id}
+      </ThemedText>
+      <ThemedText
+        lightColor="#000"
+        darkColor="#fff"
+        style={[styles.custListContentText, { flex: 1 }]}
+      >
+        {item.name}
+      </ThemedText>
+      <ThemedText
+        lightColor="#000"
+        darkColor="#fff"
+        style={styles.custListContentText}
+      >
+        {item.phone}
+      </ThemedText>
+      <ThemedText
+        lightColor="#000"
+        darkColor="#fff"
+        style={styles.custListContentText}
+      >
+        {item.address}
+      </ThemedText>
     </TouchableOpacity>
   );
   const fetchCustomers = useCallback(async () => {
@@ -61,89 +82,139 @@ const CustomerScreen = () => {
     fetchCustomers();
   }, [fetchCustomers]);
   return (
-    <View style={{ flex: 1 }}>
-      {!showCustomerForm ? (
-        <View style={styles.customerContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Customers</Text>
-          </View>
-          <View style={styles.listContainer}>
-            <FlatList
-              data={customers}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => `${item.id}-${index}`}
-              stickyHeaderIndices={[0]}
-              stickyHeaderHiddenOnScroll={true}
-              showsVerticalScrollIndicator={true}
-              ListHeaderComponent={() => (
-                <View
-                  style={[
-                    styles.custListItemContainer,
-                    styles.custListItemContainerHeader,
-                  ]}
-                >
-                  <Text style={[styles.custListHeaderText, { width: 60 }]}>
-                    ID
-                  </Text>
-                  <Text style={[styles.custListHeaderText, { flex: 1 }]}>
-                    Name
-                  </Text>
-                  <Text style={styles.custListHeaderText}>Phone</Text>
-                  <Text style={styles.custListHeaderText}>Address</Text>
-                </View>
-              )}
-              ListHeaderComponentStyle={styles.custListItemContainerHeader}
-              ListEmptyComponent={() => (
-                <View style={styles.noCustomerFoundContainer}>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    No customers found. Please add some.
-                  </Text>
-                  <Button
-                    title="Add Customer"
-                    onPress={() => setShowCustomerForm(true)}
-                    color="green"
-                  />
-                </View>
-              )}
-              ListFooterComponent={() => <></>}
-            />
-          </View>
-          <View
-            style={[
-              styles.buttonContainer,
-              { display: customers.length > 0 ? "flex" : "none" },
-            ]}
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        {!showCustomerForm ? (
+          <ThemedView
+            lightColor="#ffffff"
+            darkColor="#000000"
+            style={styles.customerContainer}
           >
-            <Button
-              title="Add Customer"
-              onPress={() => setShowCustomerForm(true)}
-              color="green"
-            />
-            <Button
-              title="Clear All Customers"
-              onPress={() => clearAllCustomers().then(() => fetchCustomers())}
-              color="red"
-            />
-          </View>
-        </View>
-      ) : (
-        <CustomerForm
-          isEditMode={isEditMode}
-          onClose={(updated) => handleCloseForm(updated || false)}
-          customerData={selectedCustomer}
-        />
-      )}
-    </View>
+            <ThemedView
+              lightColor="#ffffff"
+              darkColor="#000000"
+              style={styles.titleContainer}
+            >
+              <ThemedText
+                lightColor="#000"
+                darkColor="#fff"
+                style={styles.title}
+              >
+                Customers
+              </ThemedText>
+            </ThemedView>
+            <ThemedView
+              lightColor="#ffffff"
+              darkColor="#000000"
+              style={styles.listContainer}
+            >
+              <FlatList
+                data={customers}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => `${item.id}-${index}`}
+                stickyHeaderIndices={[0]}
+                stickyHeaderHiddenOnScroll={false}
+                showsVerticalScrollIndicator={true}
+                ListHeaderComponent={() => (
+                  <ThemedView
+                    lightColor="#ffffff"
+                    darkColor="#000000"
+                    style={[
+                      styles.custListItemContainer,
+                      styles.custListItemContainerHeader,
+                    ]}
+                  >
+                    <ThemedText
+                      lightColor="#000"
+                      darkColor="#fff"
+                      style={[styles.custListHeaderText, { width: 60 }]}
+                    >
+                      ID
+                    </ThemedText>
+                    <ThemedText
+                      lightColor="#000"
+                      darkColor="#fff"
+                      style={[styles.custListHeaderText, { flex: 1 }]}
+                    >
+                      Name
+                    </ThemedText>
+                    <ThemedText
+                      lightColor="#000"
+                      darkColor="#fff"
+                      style={styles.custListHeaderText}
+                    >
+                      Phone
+                    </ThemedText>
+                    <ThemedText
+                      lightColor="#000"
+                      darkColor="#fff"
+                      style={styles.custListHeaderText}
+                    >
+                      Address
+                    </ThemedText>
+                  </ThemedView>
+                )}
+                ListHeaderComponentStyle={styles.custListItemContainerHeader}
+                ListEmptyComponent={() => (
+                  <ThemedView
+                    lightColor="#ffffff"
+                    darkColor="#000000"
+                    style={styles.noCustomerFoundContainer}
+                  >
+                    <ThemedText
+                      lightColor="#000"
+                      darkColor="#fff"
+                      style={{ fontSize: 16, fontWeight: "bold" }}
+                    >
+                      No customers found. Please add some.
+                    </ThemedText>
+                    <Button
+                      title="Add Customer"
+                      onPress={() => setShowCustomerForm(true)}
+                      color="green"
+                    />
+                  </ThemedView>
+                )}
+                ListFooterComponent={() => <></>}
+              />
+            </ThemedView>
+            <ThemedView
+              lightColor="#ffffff"
+              darkColor="#000000"
+              style={[
+                styles.buttonContainer,
+                { display: customers.length > 0 ? "flex" : "none" },
+              ]}
+            >
+              <Button
+                title="Add Customer"
+                onPress={() => setShowCustomerForm(true)}
+                color="green"
+              />
+              <Button
+                title="Clear All Customers"
+                onPress={() => clearAllCustomers().then(() => fetchCustomers())}
+                color="red"
+              />
+            </ThemedView>
+          </ThemedView>
+        ) : (
+          <CustomerForm
+            isEditMode={isEditMode}
+            onClose={(updated) => handleCloseForm(updated || false)}
+            customerData={selectedCustomer}
+          />
+        )}
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
 const styles = StyleSheet.create({
   customerContainer: {
     flexGrow: 1,
-    paddingTop: 40,
   },
   titleContainer: {
-    backgroundColor: "#3b05fe",
     alignItems: "center",
     gap: 8,
     padding: 12,
@@ -151,12 +222,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#fff",
   },
   listContainer: {
     flexGrow: 1,
     flexDirection: "column",
-    backgroundColor: "#f0f0f0",
     height: 100,
   },
   noCustomerFoundContainer: {
@@ -172,24 +241,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 0,
-    backgroundColor: "#f0f0f0",
     borderRadius: 8,
     margin: 0,
     alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
     height: 30,
   },
   custListItemContainerHeader: {
-    backgroundColor: "#d0d0d0",
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
     padding: 0,
   },
   custListHeaderText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#555",
     width: 100,
     margin: 0,
     padding: 4,

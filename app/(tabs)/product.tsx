@@ -1,14 +1,11 @@
 import ProductForm from "@/components/forms/productForm";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import { clearAllProducts, getAllProducts, Product } from "@/services/product";
 import { useCallback, useEffect, useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const ProductScreen = () => {
   const [products, setProducts] = useState([] as Product[]);
@@ -18,20 +15,50 @@ const ProductScreen = () => {
     undefined,
   );
   const renderItem = ({ item }: { item: Product }) => (
-    <TouchableOpacity
-      style={styles.prodListItemContainer}
-      key={item.id}
-      onPress={() => {
-        setSelectedProduct(item);
-        setIsEditMode(true);
-        setShowProductForm(true);
-      }}
+    <ThemedView
+      lightColor="#f0f0f0"
+      darkColor="#101010"
+      style={styles.prodListItemThemedContainer}
     >
-      <Text style={styles.prodListContentText}>{item.id}</Text>
-      <Text style={[styles.prodListContentText, { flex: 1 }]}>{item.name}</Text>
-      <Text style={styles.prodListContentText}>{item.rate}</Text>
-      <Text style={styles.prodListContentText}>{item.stock}</Text>
-    </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.prodListItemContainer}
+        key={item.id}
+        onPress={() => {
+          setSelectedProduct(item);
+          setIsEditMode(true);
+          setShowProductForm(true);
+        }}
+      >
+        <ThemedText
+          lightColor="#000"
+          darkColor="#fff"
+          style={styles.prodListContentText}
+        >
+          {item.id}
+        </ThemedText>
+        <ThemedText
+          lightColor="#000"
+          darkColor="#fff"
+          style={[styles.prodListContentText, { flex: 1 }]}
+        >
+          {item.name}
+        </ThemedText>
+        <ThemedText
+          lightColor="#000"
+          darkColor="#fff"
+          style={styles.prodListContentText}
+        >
+          {item.rate}
+        </ThemedText>
+        <ThemedText
+          lightColor="#000"
+          darkColor="#fff"
+          style={styles.prodListContentText}
+        >
+          {item.stock}
+        </ThemedText>
+      </TouchableOpacity>
+    </ThemedView>
   );
   const fetchProducts = useCallback(async () => {
     await getAllProducts().then((data) => {
@@ -55,87 +82,124 @@ const ProductScreen = () => {
     fetchProducts();
   }, [fetchProducts]);
   return (
-    <View style={{ flex: 1 }}>
-      {!showProductForm ? (
-        <View style={styles.productContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Products</Text>
-          </View>
-          <View style={styles.listContainer}>
-            <FlatList
-              data={products}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              stickyHeaderIndices={[0]}
-              stickyHeaderHiddenOnScroll={true}
-              showsVerticalScrollIndicator={true}
-              ListHeaderComponent={() => (
-                <View
-                  style={[
-                    styles.prodListItemContainer,
-                    styles.prodListItemContainerHeader,
-                  ]}
-                >
-                  <Text style={styles.prodListHeaderText}>ID</Text>
-                  <Text style={[styles.prodListHeaderText, { flex: 1 }]}>
-                    Name
-                  </Text>
-                  <Text style={styles.prodListHeaderText}>Rate</Text>
-                  <Text style={styles.prodListHeaderText}>Stock</Text>
-                </View>
-              )}
-              ListHeaderComponentStyle={styles.prodListItemContainerHeader}
-              ListEmptyComponent={() => (
-                <View style={styles.noProductFoundContainer}>
-                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                    No products found. Please add some.
-                  </Text>
-                  <Button
-                    title="Add Product"
-                    onPress={() => setShowProductForm(true)}
-                    color="green"
-                  />
-                </View>
-              )}
-              ListFooterComponent={() => <></>}
-            />
-          </View>
-          <View
-            style={[
-              styles.buttonContainer,
-              { display: products.length > 0 ? "flex" : "none" },
-            ]}
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        {!showProductForm ? (
+          <ThemedView
+            lightColor="#ffffff"
+            darkColor="#000000"
+            style={styles.productContainer}
           >
-            <Button
-              title="Add Product"
-              onPress={() => setShowProductForm(true)}
-              color="green"
-            />
-            <Button
-              title="Clear All Products"
-              onPress={() => clearAllProducts().then(() => fetchProducts())}
-              color="red"
-            />
-          </View>
-        </View>
-      ) : (
-        <ProductForm
-          isEditMode={isEditMode}
-          onClose={(updated) => handleCloseForm(updated || false)}
-          productData={selectedProduct}
-        />
-      )}
-    </View>
+            <ThemedView
+              lightColor="#D0D0D0"
+              darkColor="#353636"
+              style={styles.titleContainer}
+            >
+              <ThemedText type="title">Products</ThemedText>
+            </ThemedView>
+            <ThemedView
+              lightColor="#D0D0D0"
+              darkColor="#353636"
+              style={styles.listContainer}
+            >
+              <FlatList
+                data={products}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                stickyHeaderIndices={[0]}
+                stickyHeaderHiddenOnScroll={false}
+                showsVerticalScrollIndicator={true}
+                ListHeaderComponent={() => (
+                  <ThemedView
+                    lightColor="#9d9d9d"
+                    darkColor="#000000"
+                    style={[styles.prodListItemContainerHeader]}
+                  >
+                    <ThemedText
+                      lightColor="#000"
+                      darkColor="#fff"
+                      style={styles.prodListHeaderText}
+                    >
+                      ID
+                    </ThemedText>
+                    <ThemedText
+                      lightColor="#000"
+                      darkColor="#fff"
+                      style={[styles.prodListHeaderText, { flex: 1 }]}
+                    >
+                      Name
+                    </ThemedText>
+                    <ThemedText
+                      lightColor="#000"
+                      darkColor="#fff"
+                      style={styles.prodListHeaderText}
+                    >
+                      Rate
+                    </ThemedText>
+                    <ThemedText
+                      lightColor="#000"
+                      darkColor="#fff"
+                      style={styles.prodListHeaderText}
+                    >
+                      Stock
+                    </ThemedText>
+                  </ThemedView>
+                )}
+                ListHeaderComponentStyle={styles.prodListItemContainerHeader}
+                ListEmptyComponent={() => (
+                  <ThemedView style={styles.noProductFoundContainer}>
+                    <ThemedText
+                      lightColor="#000"
+                      darkColor="#fff"
+                      style={{ fontSize: 16, fontWeight: "bold" }}
+                    >
+                      No products found. Please add some.
+                    </ThemedText>
+                    <Button
+                      title="Add Product"
+                      onPress={() => setShowProductForm(true)}
+                      color="green"
+                    />
+                  </ThemedView>
+                )}
+                ListFooterComponent={() => <></>}
+              />
+            </ThemedView>
+            <ThemedView
+              style={[
+                styles.buttonContainer,
+                { display: products.length > 0 ? "flex" : "none" },
+              ]}
+            >
+              <Button
+                title="Add Product"
+                onPress={() => setShowProductForm(true)}
+                color="green"
+              />
+              <Button
+                title="Clear All Products"
+                onPress={() => clearAllProducts().then(() => fetchProducts())}
+                color="red"
+              />
+            </ThemedView>
+          </ThemedView>
+        ) : (
+          <ProductForm
+            isEditMode={isEditMode}
+            onClose={(updated) => handleCloseForm(updated || false)}
+            productData={selectedProduct}
+          />
+        )}
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
 const styles = StyleSheet.create({
   productContainer: {
     flexGrow: 1,
-    paddingTop: 40,
   },
   titleContainer: {
-    backgroundColor: "#3b05fe",
     alignItems: "center",
     gap: 8,
     padding: 12,
@@ -148,7 +212,6 @@ const styles = StyleSheet.create({
   listContainer: {
     flexGrow: 1,
     flexDirection: "column",
-    backgroundColor: "#f0f0f0",
     height: 100,
   },
   noProductFoundContainer: {
@@ -160,27 +223,32 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 8,
   },
+  prodListItemThemedContainer: {
+    padding: 0,
+    borderRadius: 8,
+    margin: 0,
+  },
   prodListItemContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 0,
-    backgroundColor: "#f0f0f0",
     borderRadius: 8,
     margin: 0,
     alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    height: 30,
   },
   prodListItemContainerHeader: {
-    backgroundColor: "#d0d0d0",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
     padding: 0,
+    marginBottom: 1,
   },
   prodListHeaderText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#555",
     width: 60,
     margin: 0,
     padding: 4,
