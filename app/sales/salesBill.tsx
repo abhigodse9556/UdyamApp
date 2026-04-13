@@ -1,3 +1,4 @@
+import ProductCard from "@/components/common/productCard";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
@@ -132,6 +133,7 @@ const SalesBill = (props: SalesBillProps) => {
             >
               Bill Items for - {customer?.name || "No customer selected"}
             </ThemedText>
+
             {salesBillItems?.map((item, index) => (
               <TouchableOpacity
                 key={`item.id-${index}`}
@@ -140,8 +142,12 @@ const SalesBill = (props: SalesBillProps) => {
                   setIsProductReplacement(true);
                   setSelectedProduct(item);
                 }}
+                style={{
+                  marginBottom: 4,
+                }}
               >
-                <View style={styles.custContainerRow1} key={`item.id-${index}`}>
+                <ProductCard index={index} product={item} />
+                {/* <View style={styles.custContainerRow1} key={`item.id-${index}`}>
                   <ThemedText
                     lightColor="#000000"
                     darkColor="#ffffff"
@@ -163,7 +169,7 @@ const SalesBill = (props: SalesBillProps) => {
                   >
                     {item.quantity}
                   </ThemedText>
-                </View>
+                </View> */}
               </TouchableOpacity>
             ))}
             <Button
