@@ -20,12 +20,8 @@ const ProductSearch = (props: ProductSearchProps) => {
   if (!salesContextValue) {
     throw new Error("SalesContext not found. Wrap with SalesProvider.");
   }
-  const {
-    salesBillItems,
-    setSalesBillItems,
-    selectedProduct,
-    setSelectedProduct,
-  } = salesContextValue;
+  const { setSalesBillItems, selectedProduct, setSelectedProduct } =
+    salesContextValue;
   const qtyInputRef = useRef<TextInput | null>(null);
 
   const [oldProduct, setOldProduct] = useState<SalesBillItem | null>(null);
@@ -49,32 +45,29 @@ const ProductSearch = (props: ProductSearchProps) => {
   };
 
   const addToBill = (item: SalesBillItem) => {
-    let existingItemIndex = -1;
-    if (isProductReplacement) {
-      const updatedItems = salesBillItems.filter((i, index) => {
-        if (i.id === oldProduct?.id) {
-          existingItemIndex = index;
+    setSalesBillItems((prevItems) => {
+      // 👉 Replacement case
+      if (isProductReplacement && oldProduct) {
+        const index = prevItems.findIndex((i) => i.id === oldProduct.id);
+
+        if (index !== -1) {
+          const updated = [...prevItems];
+          updated[index] = item; // replace at same position
+          return updated;
         }
-        return i.id !== oldProduct?.id;
-      });
-      setSalesBillItems(() => updatedItems);
-    }
-    const exists = salesBillItems.some((i) => i.id === item.id);
-    if (exists) {
-      const updatedItems = salesBillItems.map((i) =>
-        i.id === item.id ? item : i,
-      );
-      setSalesBillItems(() => updatedItems);
-    } else {
-      if (existingItemIndex > -1) {
-        setSalesBillItems((prev) => [
-          ...prev.slice(0, existingItemIndex),
-          item,
-          ...prev.slice(existingItemIndex),
-        ]);
       }
-      setSalesBillItems([...salesBillItems, item]);
-    }
+
+      // 👉 If item already exists → update it
+      const existsIndex = prevItems.findIndex((i) => i.id === item.id);
+      if (existsIndex !== -1) {
+        const updated = [...prevItems];
+        updated[existsIndex] = item;
+        return updated;
+      }
+
+      // 👉 Otherwise → add new
+      return [...prevItems, item];
+    });
 
     setShowProductSearchModal(false);
   };
@@ -193,7 +186,6 @@ const ProductSearch = (props: ProductSearchProps) => {
           <Button
             title="Add to Bill"
             onPress={() => {
-              setShowProductSearchModal(false);
               addToBill(selectedProduct);
               setSelectedProduct({} as SalesBillItem);
             }}
