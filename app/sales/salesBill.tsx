@@ -1,16 +1,15 @@
-import SearchList from "@/components/common/searchList";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import Input from "@/components/ui/input";
 import ModalDrawer from "@/components/ui/modalDrawer";
-import { getCustomersByName } from "@/services/customer";
 import { formatDateTime } from "@/utils/date";
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { SalesContext } from "../context/salesContext";
+import CustomerSearch from "./customerSearch";
 import ProductSearch from "./productSearch";
 
 type SalesBillProps = {
@@ -22,8 +21,7 @@ const SalesBill = (props: SalesBillProps) => {
   if (!salesContextValue) {
     throw new Error("SalesContext not found. Wrap with SalesProvider.");
   }
-  const { customer, setCustomer, salesBillItems, setSelectedProduct } =
-    salesContextValue;
+  const { customer, salesBillItems, setSelectedProduct } = salesContextValue;
   const [dateTime, setDateTime] = useState(formatDateTime());
   const [showCustSearchModal, setShowCustSearchModal] = useState(false);
   const [showProductSearchModal, setShowProductSearchModal] = useState(false);
@@ -180,40 +178,7 @@ const SalesBill = (props: SalesBillProps) => {
           onClose={() => setShowCustSearchModal(false)}
           style={{ justifyContent: "flex-end" }}
         >
-          <ThemedView
-            lightColor="#f5f8f6"
-            darkColor="#000000"
-            style={{
-              height: "90%",
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-            }}
-          >
-            <View
-              style={{
-                padding: 10,
-                height: "100%",
-                justifyContent: "space-between",
-              }}
-            >
-              <SearchList
-                label="Customer Name"
-                placeholder="Search customer..."
-                onSearch={getCustomersByName}
-                getLabel={(c) =>
-                  `${c.name} - ${c.phone} ${c.address ? `- ${c.address}` : ""}`
-                }
-                onSelect={(item) => {
-                  setCustomer(item);
-                  setShowCustSearchModal(false);
-                }}
-              />
-              <Button
-                title="Close"
-                onPress={() => setShowCustSearchModal(false)}
-              />
-            </View>
-          </ThemedView>
+          <CustomerSearch setShowCustSearchModal={setShowCustSearchModal} />
         </ModalDrawer>
         <ModalDrawer
           isVisible={showProductSearchModal}
