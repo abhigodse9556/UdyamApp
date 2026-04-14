@@ -50,7 +50,7 @@ const Input = ({
         >
           <ThemedText
             type="defaultSemiBold"
-            lightColor="#000"
+            lightColor="#566166"
             darkColor="#fff"
             style={styles.label}
           >
@@ -110,20 +110,23 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 2,
     marginLeft: 4,
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 14,
+    fontWeight: 500,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#1a1a1a",
-    borderRadius: 10,
-    paddingHorizontal: 10,
+    borderTopWidth: 0,
+    borderBottomWidth: 2,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderColor: "#a9b4b9",
+    paddingRight: 10,
     backgroundColor: "#fff",
   },
   focused: {
-    borderColor: "#007AFF",
+    borderBottomWidth: 1,
+    borderColor: "#3b82f680",
   },
   errorBorder: {
     borderColor: "red",
@@ -131,8 +134,9 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 45,
-    fontSize: 16,
-    color: "#000",
+    fontSize: 18,
+    color: "#2a3439",
+    fontFamily: "Inter",
   },
   icon: {
     marginHorizontal: 5,

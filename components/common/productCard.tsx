@@ -13,9 +13,9 @@ const ProductCard = (props: ProductCardProps) => {
   const { index, product } = props;
   return (
     <ThemedView
-      lightColor="#efe4fb"
+      lightColor="#ffffff"
       darkColor="#190231"
-      style={styles.container}
+      style={[styles.container, styles.cardShadow]}
     >
       <View style={styles.indexContainer}>
         <ThemedText lightColor="#0f001f" darkColor="#efe4fb">
@@ -23,7 +23,7 @@ const ProductCard = (props: ProductCardProps) => {
         </ThemedText>
       </View>
       <ThemedView
-        lightColor="#ecdeff"
+        // lightColor="rgb(240 244 247)"
         darkColor="#0f001f"
         style={styles.contentContainer}
       >
@@ -91,6 +91,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderWidth: 0,
     borderColor: "#f9f9f9",
+  },
+  cardShadow: {
+    // --- iOS Shadow Properties ---
+    shadowColor: "rgb(42, 52, 57)", // Base color without opacity
+    shadowOffset: {
+      width: 0, // x-offset
+      height: 4, // y-offset
+    },
+    shadowOpacity: 0.04, // Opacity from the rgba value
+    shadowRadius: 20, // Blur radius
+
+    // --- Android Shadow Property ---
+    elevation: 2, // Closest approximation for a subtle shadow
   },
   indexContainer: {
     width: 30,

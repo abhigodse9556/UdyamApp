@@ -1,6 +1,7 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { getShopOwner } from "@/services/shopOwner";
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
@@ -10,6 +11,10 @@ import SalesProvider from "../context/salesContext";
 import SalesBill from "../sales/salesBill";
 
 const SalesScreen = () => {
+  const backgroundColor = useThemeColor(
+    { light: "#ffffff", dark: "#000000" },
+    "background",
+  );
   const [shopData, setShopData] = useState({
     id: "",
     name: "",
@@ -35,7 +40,7 @@ const SalesScreen = () => {
 
   return (
     <SalesProvider>
-      <SafeAreaProvider>
+      <SafeAreaProvider style={{ backgroundColor }}>
         <SafeAreaView style={styles.mainContainer}>
           <ThemedView
             lightColor="#ffffff"
@@ -43,7 +48,7 @@ const SalesScreen = () => {
             style={{ padding: 6 }}
           >
             <ThemedView
-              lightColor="#f0f0f0"
+              lightColor="#ffffff"
               darkColor="#101010"
               style={styles.headerContainer}
             >
@@ -56,7 +61,7 @@ const SalesScreen = () => {
               </ThemedText>
             </ThemedView>
             <ThemedView
-              lightColor="#f0f0f0"
+              lightColor="#ffffff"
               darkColor="#101010"
               style={styles.buttonContainer}
             >
@@ -85,6 +90,7 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 0,
     padding: 0,
+    justifyContent: "space-between",
   },
   headerContainer: { padding: 6, borderRadius: 8 },
   buttonContainer: { padding: 6, borderRadius: 8, marginTop: 6 },
