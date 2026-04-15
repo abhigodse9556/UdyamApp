@@ -6,25 +6,48 @@ import { ThemedView } from "../themed-view";
 type ButtonProps = {
   title: string;
   onPress: () => void;
-  color?: string;
+  lightColor?: string;
+  darkColor?: string;
   disabled?: boolean;
+  style?: object;
+  titleStyle?: object;
+  rightIcon?: React.ReactNode;
 };
 
 const Button = (props: ButtonProps) => {
-  const { title, onPress, color = "#2196F3", disabled = false } = props;
+  const {
+    title,
+    onPress,
+    lightColor = "#2196F3",
+    darkColor = "#86c8ff",
+    disabled = false,
+    style,
+    titleStyle,
+    rightIcon,
+  } = props;
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView
+      lightColor={lightColor}
+      darkColor={darkColor}
+      style={[styles.container]}
+    >
       {/* Custom TouchableOpacity Button */}
       <TouchableOpacity
         style={[
           styles.customButton,
-          { backgroundColor: color, opacity: disabled ? 0.5 : 1 },
+          {
+            opacity: disabled ? 0.5 : 1,
+          },
+          style,
         ]}
         activeOpacity={0.7}
         onPress={onPress}
         disabled={disabled}
       >
-        <ThemedText style={styles.customButtonText}>{title}</ThemedText>
+        <ThemedText style={[styles.customButtonText, titleStyle]}>
+          {title}
+        </ThemedText>
+        {rightIcon && <>{rightIcon}</>}
       </TouchableOpacity>
     </ThemedView>
   );
@@ -32,22 +55,24 @@ const Button = (props: ButtonProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "transparent",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 0,
-    marginTop: 10,
-  },
-  customButton: {
-    backgroundColor: "#2196F3",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 12,
+    minHeight: 50,
+    borderRadius: 10,
     elevation: 3, // Shadow for Android
     shadowColor: "#000", // Shadow for iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 0,
+    margin: 0,
+  },
+  customButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 6,
+    borderRadius: 10,
   },
   customButtonText: {
     color: "#fff",

@@ -11,6 +11,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { SalesContext } from "../context/salesContext";
+import BillSummary from "./billSummary";
 import CustomerSearch from "./customerSearch";
 import ProductSearch from "./productSearch";
 
@@ -53,24 +54,27 @@ const SalesBill = (props: SalesBillProps) => {
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 10,
+                marginLeft: 4,
               }}
             >
-              <IconSymbol
-                name="arrow-left"
-                type="AntDesign"
-                size={20}
-                color="#4059aa"
-              />
+              <TouchableOpacity onPress={() => setOpenSalesBillModal(false)}>
+                <IconSymbol
+                  name="arrow-left"
+                  type="AntDesign"
+                  size={20}
+                  color="#4059aa"
+                />
+              </TouchableOpacity>
               <ThemedText
                 lightColor="#4059aa"
                 darkColor="rgb(240 244 247)"
                 style={{
                   fontWeight: "bold",
-                  fontSize: 18,
+                  fontSize: 20,
                   fontFamily: "manrope",
                 }}
               >
-                New Sale Bill
+                New Bill
               </ThemedText>
             </View>
             <ThemedText
@@ -216,9 +220,58 @@ const SalesBill = (props: SalesBillProps) => {
               {salesBillItems?.map((item, index) => (
                 <LineItemCard key={`item.id-${index}`} item={item} />
               ))}
+              <BillSummary />
             </ThemedView>
           </KeyboardAwareScrollView>
-          <Button title="Close" onPress={() => setOpenSalesBillModal(false)} />
+          <ThemedView
+            lightColor="#ffffffcc"
+            darkColor="#101010"
+            style={styles.buttonContainer}
+          >
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <ThemedText
+                lightColor="#566166"
+                darkColor="rgb(240 244 247)"
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 14,
+                  fontFamily: "Inter, sans-serif",
+                }}
+              >
+                AMOUNT DUE
+              </ThemedText>
+              <ThemedText
+                lightColor="#4059aa"
+                darkColor="rgb(240 244 247)"
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 24,
+                  fontFamily: "Manrope",
+                }}
+              >
+                &#8377;235.19
+              </ThemedText>
+            </View>
+            <Button
+              title="Generate Bill"
+              titleStyle={{ fontSize: 20 }}
+              style={{
+                paddingHorizontal: 40,
+                paddingVertical: 20,
+                gap: 10,
+              }}
+              lightColor="#4059aa"
+              onPress={() => setOpenSalesBillModal(false)}
+              rightIcon={
+                <IconSymbol
+                  name="receipt"
+                  type="FontAwesome5"
+                  size={22}
+                  color="#ffffff"
+                />
+              }
+            />
+          </ThemedView>
         </ThemedView>
         <ModalDrawer
           isVisible={showCustSearchModal}
@@ -264,6 +317,14 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 20,
     borderRadius: 8,
+  },
+  buttonContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 26,
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 18,
   },
 });
 
