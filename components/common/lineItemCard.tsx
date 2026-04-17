@@ -56,7 +56,7 @@ const LineItemCard = (props: LineItemCardProps) => {
                 type="MaterialIcons"
                 name="remove"
                 size={16}
-                color="#49454F"
+                lightColor="#49454F"
               />
             </TouchableOpacity>
 
@@ -73,7 +73,7 @@ const LineItemCard = (props: LineItemCardProps) => {
                 type="MaterialIcons"
                 name="add"
                 size={16}
-                color="#49454F"
+                lightColor="#49454F"
               />
             </TouchableOpacity>
           </ThemedView>
@@ -108,7 +108,7 @@ const LineItemCard = (props: LineItemCardProps) => {
             type="Ionicons"
             name="trash-outline"
             size={22}
-            color="#B3261E"
+            lightColor="#B3261E"
           />
         </TouchableOpacity>
       </View>

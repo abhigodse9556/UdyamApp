@@ -55,7 +55,7 @@ const ProductCard = (props: ProductCardProps) => {
                 size={12}
                 name="minus"
                 type="AntDesign"
-                color="#0f001f"
+                lightColor="#0f001f"
               />
             </TouchableOpacity>
             <ThemedText type="default" lightColor="#0f001f" darkColor="#efe4fb">
@@ -73,7 +73,7 @@ const ProductCard = (props: ProductCardProps) => {
                 size={12}
                 name="plus"
                 type="AntDesign"
-                color="#0f001f"
+                lightColor="#0f001f"
               />
             </TouchableOpacity>
           </View>

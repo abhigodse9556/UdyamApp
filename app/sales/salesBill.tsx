@@ -40,13 +40,13 @@ const SalesBill = (props: SalesBillProps) => {
     <SafeAreaProvider>
       <SafeAreaView style={styles.mainContainer}>
         <ThemedView
-          lightColor="rgb(240 244 247)"
+          lightColor="#ffffff"
           darkColor="#000000"
           style={styles.mainContainer}
         >
           <ThemedView
             lightColor="rgb(255, 255, 255)"
-            darkColor="#000000"
+            darkColor="#1a1c1f"
             style={styles.headerContainer}
           >
             <View
@@ -62,7 +62,8 @@ const SalesBill = (props: SalesBillProps) => {
                   name="arrow-left"
                   type="AntDesign"
                   size={20}
-                  color="#4059aa"
+                  lightColor="#4059aa"
+                  darkColor="rgb(240 244 247)"
                 />
               </TouchableOpacity>
               <ThemedText
@@ -88,7 +89,7 @@ const SalesBill = (props: SalesBillProps) => {
           <KeyboardAwareScrollView style={{ flex: 1, padding: 16 }}>
             <ThemedView
               lightColor="#ffffff"
-              darkColor="#101010"
+              darkColor="#000000"
               style={styles.contentContainer}
             >
               <View
@@ -110,16 +111,16 @@ const SalesBill = (props: SalesBillProps) => {
                 </ThemedText>
                 <ThemedText
                   lightColor="#4059aa"
-                  darkColor="#4059aa"
+                  darkColor="#a9c7ff"
                   style={{ fontWeight: "bold", fontSize: 16 }}
                 >
-                  STEP 1 OF 2
+                  Step 1 of 2
                 </ThemedText>
               </View>
 
               <ThemedView
                 lightColor="#f0f4f7"
-                darkColor="#101010"
+                darkColor="#282a2d"
                 style={styles.custContainerRow1}
               >
                 <Input
@@ -134,14 +135,16 @@ const SalesBill = (props: SalesBillProps) => {
                         name="edit"
                         type="AntDesign"
                         size={20}
-                        color="#566166"
+                        lightColor="#566166"
+                        // darkColor="#000"
                       />
                     ) : (
                       <IconSymbol
                         name="add-user"
                         type="Entypo"
                         size={20}
-                        color="#566166"
+                        lightColor="#566166"
+                        // darkColor="#000"
                       />
                     )
                   }
@@ -161,14 +164,14 @@ const SalesBill = (props: SalesBillProps) => {
                         name="edit"
                         type="AntDesign"
                         size={20}
-                        color="#566166"
+                        lightColor="#566166"
                       />
                     ) : (
                       <IconSymbol
                         name="add-call"
                         type="MaterialIcons"
                         size={20}
-                        color="#566166"
+                        lightColor="#566166"
                       />
                     )
                   }
@@ -201,11 +204,12 @@ const SalesBill = (props: SalesBillProps) => {
                   name="add-circle-outline"
                   type="MaterialIcons"
                   size={20}
-                  color="#4059aa"
+                  lightColor="#4059aa"
+                  darkColor="#a9c7ff"
                 />
                 <ThemedText
                   lightColor="#4059aa"
-                  darkColor="#4059aa"
+                  darkColor="#a9c7ff"
                   style={{ fontWeight: "bold", fontSize: 18 }}
                 >
                   Add Product
@@ -214,7 +218,7 @@ const SalesBill = (props: SalesBillProps) => {
             </View>
             <ThemedView
               lightColor="#ffffff"
-              darkColor="#101010"
+              darkColor="#000000"
               style={[styles.contentContainer, { flex: 1 }]}
             >
               {salesBillItems?.map((item, index) => (
@@ -225,7 +229,7 @@ const SalesBill = (props: SalesBillProps) => {
           </KeyboardAwareScrollView>
           <ThemedView
             lightColor="#ffffffcc"
-            darkColor="#101010"
+            darkColor="#111316b3"
             style={styles.buttonContainer}
           >
             <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -242,14 +246,14 @@ const SalesBill = (props: SalesBillProps) => {
               </ThemedText>
               <ThemedText
                 lightColor="#4059aa"
-                darkColor="rgb(240 244 247)"
+                darkColor="#a9c7ff"
                 style={{
                   fontWeight: "bold",
                   fontSize: 24,
                   fontFamily: "Manrope",
                 }}
               >
-                &#8377;235.19
+                &#8377;385.19
               </ThemedText>
             </View>
             <Button
@@ -261,13 +265,14 @@ const SalesBill = (props: SalesBillProps) => {
                 gap: 10,
               }}
               lightColor="#4059aa"
+              darkColor="#005eb8"
               onPress={() => setOpenSalesBillModal(false)}
               rightIcon={
                 <IconSymbol
-                  name="receipt"
-                  type="FontAwesome5"
-                  size={22}
-                  color="#ffffff"
+                  name="receipt-long"
+                  type="MaterialIcons"
+                  size={24}
+                  lightColor="#ffffff"
                 />
               }
             />
@@ -301,7 +306,7 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 0,
     justifyContent: "space-between",
-    backgroundColor: "#ffffff",
+    // backgroundColor: "#1a1c1f",
   },
   headerContainer: {
     padding: 10,

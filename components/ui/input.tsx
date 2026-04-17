@@ -4,6 +4,7 @@ import {
   TextInput,
   TextInputProps,
   TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 import { ThemedText } from "../themed-text";
 import { ThemedView } from "../themed-view";
@@ -38,6 +39,8 @@ const Input = ({
 
   const showError = touched && !!error;
 
+  const theme = useColorScheme() ?? "light";
+
   return (
     <ThemedView style={[styles.container, outerContainerStyle]}>
       {label && (
@@ -61,6 +64,8 @@ const Input = ({
       )}
 
       <ThemedView
+        lightColor="#ffffff"
+        darkColor="#252525"
         style={[
           styles.inputContainer,
           isFocused && styles.focused,
@@ -75,7 +80,11 @@ const Input = ({
         <TextInput
           {...props}
           ref={inputRef}
-          style={[styles.input, style]}
+          style={[
+            styles.input,
+            style,
+            { color: theme === "light" ? "#000" : "#fff" },
+          ]}
           placeholderTextColor="#999"
           onFocus={(e) => {
             setIsFocused(true);
@@ -122,7 +131,6 @@ const styles = StyleSheet.create({
     borderRightWidth: 0,
     borderColor: "#a9b4b9",
     paddingRight: 10,
-    backgroundColor: "#fff",
   },
   focused: {
     borderBottomWidth: 1,

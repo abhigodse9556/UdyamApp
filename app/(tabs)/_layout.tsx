@@ -26,7 +26,7 @@ export default function TabLayout() {
               size={28}
               name="home"
               type="MaterialIcons"
-              color={color}
+              lightColor={color}
             />
           ),
         }}
@@ -40,7 +40,7 @@ export default function TabLayout() {
               size={28}
               name="finance"
               type="MaterialCommunityIcons"
-              color={color}
+              lightColor={color}
             />
           ),
         }}
@@ -54,7 +54,7 @@ export default function TabLayout() {
               size={28}
               name="product"
               type="AntDesign"
-              color={color}
+              lightColor={color}
             />
           ),
         }}
@@ -68,7 +68,7 @@ export default function TabLayout() {
               size={24}
               name="users-gear"
               type="FontAwesome6"
-              color={color}
+              lightColor={color}
             />
           ),
         }}
@@ -78,7 +78,12 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={26} name="user" type="Entypo" color={color} />
+            <IconSymbol
+              size={26}
+              name="user"
+              type="Entypo"
+              lightColor={color}
+            />
           ),
         }}
       />

@@ -44,7 +44,11 @@ const Button = (props: ButtonProps) => {
         onPress={onPress}
         disabled={disabled}
       >
-        <ThemedText style={[styles.customButtonText, titleStyle]}>
+        <ThemedText
+          lightColor="#fff"
+          darkColor="#003063"
+          style={[styles.customButtonText, titleStyle]}
+        >
           {title}
         </ThemedText>
         {rightIcon && <>{rightIcon}</>}

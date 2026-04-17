@@ -1,3 +1,4 @@
+import { useThemeColor } from "@/hooks/use-theme-color";
 import {
   AntDesign,
   Entypo,
@@ -8,7 +9,7 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { OpaqueColorValue, StyleProp, TextStyle } from "react-native";
+import { StyleProp, TextStyle } from "react-native";
 
 /**
  * Add your SF Symbols to Material Icons mappings here.
@@ -64,13 +65,15 @@ type IconSymbolProps =
 
 type BaseProps = {
   size?: number;
-  color?: string | OpaqueColorValue;
+  lightColor?: string;
+  darkColor?: string;
   style?: StyleProp<TextStyle>;
+  weight?: "regular" | "medium" | "bold";
 };
 
 export function IconSymbol(props: IconSymbolProps & BaseProps) {
-  const { size = 24, color, style } = props;
-
+  const { size = 24, lightColor, darkColor, style, weight } = props;
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
   switch (props.type) {
     case "MaterialIcons":
       return (
@@ -79,22 +82,41 @@ export function IconSymbol(props: IconSymbolProps & BaseProps) {
           size={size}
           color={color}
           style={style}
+          weight={weight}
         />
       );
 
     case "Entypo":
       return (
-        <Entypo name={props.name} size={size} color={color} style={style} />
+        <Entypo
+          name={props.name}
+          size={size}
+          color={color}
+          style={style}
+          weight={weight}
+        />
       );
 
     case "AntDesign":
       return (
-        <AntDesign name={props.name} size={size} color={color} style={style} />
+        <AntDesign
+          name={props.name}
+          size={size}
+          color={color}
+          style={style}
+          weight={weight}
+        />
       );
 
     case "Fontisto":
       return (
-        <Fontisto name={props.name} size={size} color={color} style={style} />
+        <Fontisto
+          name={props.name}
+          size={size}
+          color={color}
+          style={style}
+          weight={weight}
+        />
       );
 
     case "FontAwesome5":
@@ -104,12 +126,19 @@ export function IconSymbol(props: IconSymbolProps & BaseProps) {
           size={size}
           color={color}
           style={style}
+          weight={weight}
         />
       );
 
     case "Ionicons":
       return (
-        <Ionicons name={props.name} size={size} color={color} style={style} />
+        <Ionicons
+          name={props.name}
+          size={size}
+          color={color}
+          style={style}
+          weight={weight}
+        />
       );
 
     case "FontAwesome6":
@@ -119,6 +148,7 @@ export function IconSymbol(props: IconSymbolProps & BaseProps) {
           size={size}
           color={color}
           style={style}
+          weight={weight}
         />
       );
 
@@ -129,6 +159,7 @@ export function IconSymbol(props: IconSymbolProps & BaseProps) {
           size={size}
           color={color}
           style={style}
+          weight={weight}
         />
       );
 

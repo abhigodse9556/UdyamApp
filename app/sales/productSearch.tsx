@@ -197,7 +197,7 @@ const ProductSearch = (props: ProductSearchProps) => {
               setShowProductSearchModal(false);
               setSelectedProduct({} as SalesBillItem);
             }}
-            color="red"
+            lightColor="red"
           />
         </View>
       </View>

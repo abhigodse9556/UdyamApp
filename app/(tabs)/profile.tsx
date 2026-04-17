@@ -109,7 +109,7 @@ const Profile = () => {
               onPress={() => {
                 clearShopOwner();
               }}
-              color="red"
+              lightColor="red"
             />
           </ThemedView>
         </ParallaxScrollView>

@@ -236,7 +236,7 @@ const CustomerForm = ({
               title={isEditMode ? "Update Changes" : "Save Customer"}
               onPress={() => handleSave(isEditMode)}
               disabled={!validateForm()}
-              color="blue"
+              lightColor="blue"
             />
             <Button
               title="Cancel"
@@ -248,7 +248,7 @@ const CustomerForm = ({
                 setErrorState({});
                 onClose();
               }}
-              color="black"
+              lightColor="black"
             />
           </View>
           <Modal

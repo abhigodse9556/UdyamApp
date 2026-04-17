@@ -8,14 +8,14 @@ const BillSummary = () => {
   return (
     <ThemedView
       lightColor="#f0f4f7"
-      darkColor="#190231"
+      darkColor="#282a2d"
       style={styles.container}
     >
       {/* Subtotal */}
       <View style={styles.row}>
         <ThemedText
           lightColor="#49454F"
-          darkColor="#ffffff"
+          darkColor="#c2c6d4"
           style={styles.label}
         >
           Subtotal
@@ -34,7 +34,7 @@ const BillSummary = () => {
         <View style={styles.infoWrapper}>
           <ThemedText
             lightColor="#49454F"
-            darkColor="#ffffff"
+            darkColor="#c2c6d4"
             style={styles.label}
           >
             Tax (GST 12%)
@@ -43,7 +43,7 @@ const BillSummary = () => {
             type="MaterialIcons"
             name="info-outline"
             size={14}
-            color="#79747E"
+            lightColor="#79747E"
             style={styles.icon}
           />
         </View>
@@ -61,7 +61,7 @@ const BillSummary = () => {
         <View>
           <ThemedText
             lightColor="#49454F"
-            darkColor="#ffffff"
+            darkColor="#c2c6d4"
             style={styles.label}
           >
             Discount
@@ -85,6 +85,23 @@ const BillSummary = () => {
         </ThemedText>
       </View>
 
+      <View style={styles.row}>
+        <ThemedText
+          lightColor="#49454F"
+          darkColor="#c2c6d4"
+          style={styles.label}
+        >
+          Shipping and Handling
+        </ThemedText>
+        <ThemedText
+          lightColor="#1C1B1F"
+          darkColor="#ffffff"
+          style={styles.value}
+        >
+          &#8377;150.00
+        </ThemedText>
+      </View>
+
       {/* Divider */}
       <View style={styles.divider} />
 
@@ -96,15 +113,15 @@ const BillSummary = () => {
           </ThemedText>
           <ThemedText
             lightColor="#1C1B1F"
-            darkColor="#ffffff"
+            darkColor="#a9c7ff"
             style={styles.totalAmount}
           >
-            &#8377;235.19
+            &#8377;385.19
           </ThemedText>
         </View>
         <ThemedView
           lightColor="#e8ddff"
-          darkColor="#190231"
+          darkColor="#6750A4"
           style={styles.currencyBadge}
         >
           <ThemedText
@@ -140,7 +157,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: "#49454F", // on-surface-variant
+    // color: "#49454F", // on-surface-variant
   },
   value: {
     fontSize: 16,
