@@ -7,7 +7,7 @@ const ORDER_KEY = "sales_orders";
 
 export interface SalesOrder {
   id: string;
-  invoiceNumber: string;
+  invoiceNumber?: string;
   customerId: Customer["id"];
   items: SalesBillItem[];
   grossAmount: number;
@@ -20,6 +20,9 @@ export interface SalesOrder {
 }
 
 export interface SalesBillItem extends Product {
+  orderItemId: string;
+  salesOrderId: SalesOrder["id"];
+  productId: Product["id"];
   quantity: number;
   soldAtRate: number;
   grossAmount: number;
@@ -34,15 +37,30 @@ export interface SalesBillItem extends Product {
 // Save saleSalesOrder (only one)
 export const saveSalesOrder = async (data: SalesOrder) => {
   const existingSalesOrders = (await getItem(ORDER_KEY)) || [];
+
   const id = await generateId("SALE_ORDER_ID_SEQ", "SL");
   const invoiceNumber = await generateId("SALE_ORDER_INVOICE_NUMBER_SEQ", "SI");
+
   const timestamp = new Date().toISOString();
+
+  const itemsWithId = await Promise.all(
+    data.items.map(async (item) => ({
+      ...item,
+      orderItemId: await generateId("SALE_ORDER_ITEM_ID_SEQ", "OI"),
+      createdAt: timestamp,
+      updatedAt: timestamp,
+      deleted: false,
+    })),
+  );
+
   const newSalesOrder = {
     ...data,
     id,
     invoiceNumber,
+    items: itemsWithId,
     createdAt: timestamp,
     updatedAt: timestamp,
+    deleted: false,
   };
 
   const updatedSalesOrders = [...existingSalesOrders, newSalesOrder];
@@ -102,6 +120,8 @@ export const deleteSalesOrder = async (id: string) => {
 export const clearAllSalesOrders = async () => {
   await setItem(ORDER_KEY, null);
   await setItem("ORDER_ID_SEQ", 0); // Reset ID sequence
+  await setItem("SALE_ORDER_INVOICE_NUMBER_SEQ", 0);
+  await setItem("SALE_ORDER_ITEM_ID_SEQ", 0);
 };
 
 export default {

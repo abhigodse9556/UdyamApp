@@ -2,6 +2,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { clearAllSalesOrders } from "@/services/salesOrder";
 import { getShopOwner } from "@/services/shopOwner";
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
@@ -69,6 +70,12 @@ const SalesScreen = () => {
                 title="Create New Sales Bill"
                 onPress={() => setOpenSalesBillModal(true)}
               />
+              <Button
+                title="Clear All Sales Bills"
+                onPress={() => clearAllSalesOrders()}
+                darkColor="red"
+                lightColor="red"
+              />
             </ThemedView>
           </ThemedView>
           <ModalDrawer
@@ -93,7 +100,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   headerContainer: { padding: 6, borderRadius: 8 },
-  buttonContainer: { padding: 6, borderRadius: 8, marginTop: 6 },
+  buttonContainer: {
+    padding: 6,
+    borderRadius: 8,
+    marginTop: 6,
+    gap: 6,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 });
 
 export default SalesScreen;

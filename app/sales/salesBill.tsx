@@ -5,7 +5,7 @@ import Button from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import Input from "@/components/ui/input";
 import ModalDrawer from "@/components/ui/modalDrawer";
-import { SalesBillItem } from "@/services/salesOrder";
+import { SalesBillItem, saveSalesOrder } from "@/services/salesOrder";
 import { calculateSalesLineItem } from "@/utils/calculate";
 import { formatDateTime } from "@/utils/date";
 import { useContext, useEffect, useState } from "react";
@@ -80,6 +80,28 @@ const SalesBill = (props: SalesBillProps) => {
       return updated;
     });
   };
+
+  const generateBill = async () => {
+    const updated = {
+      customerId: orderData.customerId,
+      grossAmount: orderData.grossAmount,
+      netAmount: orderData.netAmount,
+      discountAmount: orderData.discountAmount,
+      paidAmount: orderData.paidAmount,
+      items: [
+        ...orderData.items.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+          soldAtRate: item.soldAtRate,
+          givenDiscPercent: item.givenDiscPercent,
+          taxRate: item.taxRate,
+        })),
+      ],
+    };
+    await saveSalesOrder(updated as any);
+    setOpenSalesBillModal(false);
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.mainContainer}>
@@ -321,7 +343,7 @@ const SalesBill = (props: SalesBillProps) => {
               }}
               lightColor="#4059aa"
               darkColor="#005eb8"
-              onPress={() => setOpenSalesBillModal(false)}
+              onPress={() => generateBill()}
               rightIcon={
                 <IconSymbol
                   name="receipt-long"
