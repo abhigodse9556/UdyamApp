@@ -1,4 +1,4 @@
-import LineItemCard from "@/components/common/lineItemCard";
+import LineItemCard from "@/app/sales/lineItemCard";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
@@ -330,7 +330,7 @@ const SalesBill = (props: SalesBillProps) => {
                   fontFamily: "Manrope",
                 }}
               >
-                &#8377;{orderData?.netAmount || 0}
+                &#8377;{(orderData?.netAmount || 0)?.toFixed(2)}
               </ThemedText>
             </View>
             <Button

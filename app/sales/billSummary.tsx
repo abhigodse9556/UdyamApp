@@ -31,7 +31,7 @@ const BillSummary = () => {
           darkColor="#ffffff"
           style={styles.value}
         >
-          &#8377;{orderData?.grossAmount || 0.0}
+          &#8377;{(orderData?.grossAmount || 0.0)?.toFixed(2)}
         </ThemedText>
       </View>
 
@@ -87,7 +87,7 @@ const BillSummary = () => {
           darkColor="#B3261E"
           style={[styles.value, styles.errorText]}
         >
-          -&#8377;{orderData?.discountAmount || 0.0}
+          -&#8377;{(orderData?.discountAmount || 0.0)?.toFixed(2)}
         </ThemedText>
       </View>
 
@@ -122,7 +122,7 @@ const BillSummary = () => {
             darkColor="#a9c7ff"
             style={styles.totalAmount}
           >
-            &#8377;{orderData?.netAmount || 0.0}
+            &#8377;{(orderData?.netAmount || 0.0)?.toFixed(2)}
           </ThemedText>
         </View>
         <ThemedView

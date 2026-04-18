@@ -1,9 +1,9 @@
 import { SalesBillItem } from "@/services/salesOrder";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { ThemedText } from "../themed-text";
-import { ThemedView } from "../themed-view";
-import { IconSymbol } from "../ui/icon-symbol";
+import { ThemedText } from "../../components/themed-text";
+import { ThemedView } from "../../components/themed-view";
+import { IconSymbol } from "../../components/ui/icon-symbol";
 
 interface LineItemCardProps {
   item: SalesBillItem;
@@ -88,15 +88,25 @@ const LineItemCard = (props: LineItemCardProps) => {
               />
             </TouchableOpacity>
           </ThemedView>
-
-          {/* Unit Price */}
-          <ThemedText
-            lightColor="#49454F"
-            darkColor="#ffffff"
-            style={styles.unitPriceText}
-          >
-            &#8377;{item.soldAtRate}
-          </ThemedText>
+          <View style={styles.unitPriceDiscountContainer}>
+            {/* Unit Price */}
+            <ThemedText
+              lightColor="#49454F"
+              darkColor="#ffffff"
+              style={styles.unitPriceText}
+            >
+              &#8377;{item.soldAtRate}
+            </ThemedText>
+            {item.givenDiscPercent && (
+              <ThemedText
+                lightColor="#ff0000"
+                darkColor="#f75353"
+                style={styles.unitDiscountText}
+              >
+                {item.givenDiscPercent}%
+              </ThemedText>
+            )}
+          </View>
         </View>
       </View>
 
@@ -107,7 +117,7 @@ const LineItemCard = (props: LineItemCardProps) => {
           darkColor="#a9c7ff"
           style={styles.totalPrice}
         >
-          &#8377;{item.grossAmount}
+          &#8377;{item.netAmount?.toFixed(2)}
         </ThemedText>
 
         <TouchableOpacity
@@ -186,9 +196,19 @@ const styles = StyleSheet.create({
     minWidth: 24,
     textAlign: "center",
   },
+  unitPriceDiscountContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
   unitPriceText: {
-    fontSize: 13, // text-[10px]
-    fontWeight: "500", // font-medium
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  unitDiscountText: {
+    fontSize: 13,
+    fontWeight: "500",
+    marginTop: 4,
   },
   rightSection: {
     alignItems: "flex-end", // text-right equivalent for flex

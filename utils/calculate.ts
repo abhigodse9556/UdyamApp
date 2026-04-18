@@ -2,13 +2,15 @@ import { SalesBillItem, SalesOrder } from "@/services/salesOrder";
 
 export const calculateSalesLineItem = (product: SalesBillItem) => {
   const grossAmount = product.quantity * product.soldAtRate;
-  const discountAmount = grossAmount * (product.givenDiscPercent || 0);
+  const discountAmount = (grossAmount * (product?.givenDiscPercent || 0)) / 100;
   const netAmount = grossAmount - discountAmount;
+  const taxAmount = (grossAmount * (product?.taxRate || 0)) / 100;
   return {
     ...product,
     grossAmount,
     discountAmount,
     netAmount,
+    taxAmount,
   } as SalesBillItem;
 };
 

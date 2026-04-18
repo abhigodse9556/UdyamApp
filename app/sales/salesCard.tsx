@@ -1,16 +1,25 @@
-import { SalesBillItem } from "@/services/salesOrder";
-import React from "react";
+import { Customer, getCustomerById } from "@/services/customer";
+import { SalesOrder } from "@/services/salesOrder";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { ThemedText } from "../themed-text";
-import { ThemedView } from "../themed-view";
-import { IconSymbol } from "../ui/icon-symbol";
+import { ThemedText } from "../../components/themed-text";
+import { ThemedView } from "../../components/themed-view";
+import { IconSymbol } from "../../components/ui/icon-symbol";
 
-type ProductCardProps = {
+type SalesCardProps = {
   index: number;
-  product: SalesBillItem;
+  salesOrder: SalesOrder;
 };
-const ProductCard = (props: ProductCardProps) => {
-  const { index, product } = props;
+const SalesCard = (props: SalesCardProps) => {
+  const { index, salesOrder } = props;
+  const [customer, setCustomer] = useState<Customer>({} as Customer);
+  useEffect(() => {
+    const fetchCustomer = async () => {
+      const customer = await getCustomerById(salesOrder.customerId);
+      setCustomer(customer || ({} as Customer));
+    };
+    fetchCustomer();
+  });
   return (
     <ThemedView
       lightColor="#ffffff"
@@ -29,7 +38,7 @@ const ProductCard = (props: ProductCardProps) => {
       >
         <View style={{ flex: 1 }}>
           <ThemedText type="subtitle" lightColor="#0f001f" darkColor="#efe4fb">
-            {product.name}
+            {customer.name}
           </ThemedText>
         </View>
         <View
@@ -40,7 +49,7 @@ const ProductCard = (props: ProductCardProps) => {
           }}
         >
           <ThemedText type="default" lightColor="#0f001f" darkColor="#efe4fb">
-            &#8377;{product.mrp}
+            &#8377;{salesOrder.paidAmount}
           </ThemedText>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
             <TouchableOpacity
@@ -59,7 +68,7 @@ const ProductCard = (props: ProductCardProps) => {
               />
             </TouchableOpacity>
             <ThemedText type="default" lightColor="#0f001f" darkColor="#efe4fb">
-              Qty: {product.quantity}
+              Qty: {salesOrder.invoiceNumber}
             </ThemedText>
             <TouchableOpacity
               style={{
@@ -120,4 +129,4 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
 });
-export default ProductCard;
+export default SalesCard;

@@ -3,8 +3,9 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import { getProductsByName, Product } from "@/services/product";
+import { getProductsByName } from "@/services/product";
 import { SalesBillItem } from "@/services/salesOrder";
+import { calculateSalesLineItem } from "@/utils/calculate";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -26,19 +27,15 @@ const ProductSearch = (props: ProductSearchProps) => {
 
   const [oldProduct, setOldProduct] = useState<SalesBillItem | null>(null);
 
-  const selectPoduct = (prod: Product) => {
+  const selectPoduct = (prod: SalesBillItem) => {
     const addedProduct = {
       ...prod,
       quantity: 1,
       soldAtRate: prod.rate || prod.mrp || 0,
-      grossAmount: prod.rate || prod.mrp || 0,
-      netAmount: prod.rate || prod.mrp || 0,
-      taxAmount: 0,
-      discountAmount:
-        prod.rate * (prod.allowDiscount ? prod.discount || 0 : 0) * 0.01,
       givenDiscPercent: prod.allowDiscount ? prod.discount : 0,
     };
-    setSelectedProduct(addedProduct);
+    const calculatedProduct = calculateSalesLineItem(addedProduct);
+    setSelectedProduct(calculatedProduct);
     setTimeout(() => {
       qtyInputRef.current?.focus();
     }, 100);
@@ -72,6 +69,25 @@ const ProductSearch = (props: ProductSearchProps) => {
     setShowProductSearchModal(false);
   };
 
+  const handleTextChange = (text: string, field: keyof SalesBillItem) => {
+    let value: any = text;
+
+    if (typeof selectedProduct[field] === "number") {
+      const parsed = parseFloat(text);
+      value = isNaN(parsed) ? 0 : parsed;
+    }
+
+    const calculatedProduct = calculateSalesLineItem({
+      ...selectedProduct,
+      [field]: value,
+    });
+
+    setSelectedProduct((prev) => ({
+      ...prev,
+      ...calculatedProduct,
+    }));
+  };
+
   useEffect(() => {
     if (isProductReplacement) {
       setOldProduct(selectedProduct);
@@ -103,7 +119,7 @@ const ProductSearch = (props: ProductSearchProps) => {
             `${p.name} - ${p.description ? `${p.description} - ` : ""}₹${p.rate} - ${p.stock ? p.stock : 0} in stock`
           }
           onSelect={(item) => {
-            selectPoduct(item);
+            selectPoduct(item as SalesBillItem);
           }}
         />
         {selectedProduct.name && (
@@ -123,31 +139,15 @@ const ProductSearch = (props: ProductSearchProps) => {
                 inputRef={qtyInputRef}
                 label="Quantity"
                 value={selectedProduct.quantity?.toString()}
-                onChangeText={(text) => {
-                  const qty = parseInt(text) || 0;
-                  const updatedProduct = {
-                    ...selectedProduct,
-                    quantity: qty,
-                    grossAmount: qty * selectedProduct.soldAtRate,
-                    netAmount: qty * selectedProduct.soldAtRate,
-                    discountAmount:
-                      qty *
-                      selectedProduct.soldAtRate *
-                      (selectedProduct.givenDiscPercent || 0) *
-                      0.01,
-                    taxAmount:
-                      qty *
-                      selectedProduct.soldAtRate *
-                      (selectedProduct.taxRate || 0) *
-                      0.01,
-                  };
-                  setSelectedProduct(updatedProduct);
-                }}
+                onChangeText={(text) => handleTextChange(text, "quantity")}
                 keyboardType="numeric"
               />
               <Input
                 label="Sold at Rate"
-                value={`₹${selectedProduct.soldAtRate}`}
+                leftIcon={<ThemedText>₹</ThemedText>}
+                value={selectedProduct.soldAtRate?.toString()}
+                onChangeText={(text) => handleTextChange(text, "soldAtRate")}
+                keyboardType="numeric"
               />
               <Input
                 label="Gross Amount"
@@ -161,12 +161,16 @@ const ProductSearch = (props: ProductSearchProps) => {
               />
               <Input
                 label="Tax Amount"
-                value={`₹${selectedProduct.taxRate?.toFixed(2) || 0}%`}
+                value={`₹${selectedProduct.taxAmount?.toFixed(2) || 0}`}
                 readOnly
               />
               <Input
                 label="Given Discount"
-                value={` ${selectedProduct.givenDiscPercent || 0}%`}
+                value={selectedProduct.givenDiscPercent?.toString()}
+                onChangeText={(text) =>
+                  handleTextChange(text, "givenDiscPercent")
+                }
+                keyboardType="numeric"
               />
               <Input
                 label="Discount"

@@ -2,28 +2,28 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import { useThemeColor } from "@/hooks/use-theme-color";
-import { clearAllSalesOrders } from "@/services/salesOrder";
-import { getShopOwner } from "@/services/shopOwner";
+import {
+  clearAllSalesOrders,
+  getAllSalesOrders,
+  SalesOrder,
+} from "@/services/salesOrder";
+import { getShopOwner, ShopOwner } from "@/services/shopOwner";
 import { useCallback, useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import ModalDrawer from "../../components/ui/modalDrawer";
 import SalesProvider from "../context/salesContext";
 import SalesBill from "../sales/salesBill";
+import SalesCard from "../sales/salesCard";
 
 const SalesScreen = () => {
   const backgroundColor = useThemeColor(
     { light: "#ffffff", dark: "#000000" },
     "background",
   );
-  const [shopData, setShopData] = useState({
-    id: "",
-    name: "",
-    shopName: "",
-    phone: "",
-    address: "",
-  });
+  const [shopData, setShopData] = useState({} as ShopOwner);
   const [openSalesBillModal, setOpenSalesBillModal] = useState(false);
+  const [orders, setOrders] = useState<SalesOrder[]>([]);
 
   const fetchShopOwner = useCallback(async () => {
     const owner = await getShopOwner();
@@ -35,9 +35,16 @@ const SalesScreen = () => {
       address: owner?.address || "",
     });
   }, []);
+
+  const fetchSalesOrders = useCallback(async () => {
+    const orders = await getAllSalesOrders();
+    setOrders(orders || []);
+  }, []);
+
   useEffect(() => {
     fetchShopOwner();
-  }, [fetchShopOwner]);
+    fetchSalesOrders();
+  }, [fetchShopOwner, fetchSalesOrders]);
 
   return (
     <SalesProvider>
@@ -61,6 +68,11 @@ const SalesScreen = () => {
                 {shopData.shopName || "Your Shop Name"}
               </ThemedText>
             </ThemedView>
+            <View>
+              {orders.map((order, index) => (
+                <SalesCard key={order.id} index={index} salesOrder={order} />
+              ))}
+            </View>
             <ThemedView
               lightColor="#ffffff"
               darkColor="#101010"

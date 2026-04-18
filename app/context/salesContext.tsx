@@ -28,6 +28,7 @@ const SalesProvider = ({ children }: { children: React.ReactNode }) => {
       customerId: customer.id,
       items: salesBillItems,
       grossAmount: calculatedData.grossAmount,
+      discountAmount: calculatedData.discountAmount,
       netAmount: calculatedData.netAmount,
       paidAmount: calculatedData.netAmount,
     }));
