@@ -272,7 +272,8 @@ const ProductForm = (props: ProductFormProps) => {
           onPress={() => {
             onClose(false);
           }}
-          color="black"
+          lightColor="black"
+          darkColor="white"
         />
       </View>
     </View>

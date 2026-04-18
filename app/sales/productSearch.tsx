@@ -4,7 +4,7 @@ import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { getProductsByName, Product } from "@/services/product";
-import { SalesBillItem } from "@/services/saleorder";
+import { SalesBillItem } from "@/services/salesOrder";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";

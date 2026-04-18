@@ -1,4 +1,4 @@
-import { SalesBillItem } from "@/services/saleorder";
+import { SalesBillItem } from "@/services/salesOrder";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "../themed-text";
@@ -11,37 +11,46 @@ interface LineItemCardProps {
   onIncrease?: () => void;
   onDecrease?: () => void;
   onDelete?: () => void;
+  onEdit?: () => void;
 }
 
 const LineItemCard = (props: LineItemCardProps) => {
   const {
-    item = {
-      name: "",
-      description: "",
-      quantity: 0,
-      soldAtRate: 0,
-    },
+    item = {} as SalesBillItem,
     onIncrease = () => {},
     onDecrease = () => {},
     onDelete = () => {},
+    onEdit = () => {},
   } = props;
   return (
     <ThemedView
       lightColor="#ffffff"
-      darkColor="#0f001f"
+      darkColor="#282a2d"
       style={styles.cardContainer}
     >
       {/* Left Column */}
       <View style={styles.leftSection}>
-        <ThemedText
-          lightColor="#1D1B20"
-          darkColor="#ffffff"
-          style={styles.title}
-        >
-          {item.name}
-        </ThemedText>
-        <ThemedText lightColor="#49454F" darkColor="#ffffff" style={styles.sku}>
-          SKU: {item.description}
+        <View style={styles.titleContainer}>
+          <ThemedText
+            lightColor="#1D1B20"
+            darkColor="#ffffff"
+            style={styles.title}
+          >
+            {item.name}
+          </ThemedText>
+          <TouchableOpacity onPress={onEdit} activeOpacity={0.6}>
+            <IconSymbol
+              type="FontAwesome6"
+              name="edit"
+              size={18}
+              lightColor="#49454F"
+              darkColor="#c2c6d4"
+              style={styles.editIcon}
+            />
+          </TouchableOpacity>
+        </View>
+        <ThemedText lightColor="#49454F" darkColor="#c2c6d4" style={styles.sku}>
+          {item.description}
         </ThemedText>
 
         <View style={styles.controlsRow}>
@@ -57,6 +66,7 @@ const LineItemCard = (props: LineItemCardProps) => {
                 name="remove"
                 size={16}
                 lightColor="#49454F"
+                darkColor="#c2c6d4"
               />
             </TouchableOpacity>
 
@@ -74,6 +84,7 @@ const LineItemCard = (props: LineItemCardProps) => {
                 name="add"
                 size={16}
                 lightColor="#49454F"
+                darkColor="#c2c6d4"
               />
             </TouchableOpacity>
           </ThemedView>
@@ -93,10 +104,10 @@ const LineItemCard = (props: LineItemCardProps) => {
       <View style={styles.rightSection}>
         <ThemedText
           lightColor="#2B418E"
-          darkColor="#ffffff"
+          darkColor="#a9c7ff"
           style={styles.totalPrice}
         >
-          &#8377;{item.soldAtRate * item.quantity}
+          &#8377;{item.grossAmount}
         </ThemedText>
 
         <TouchableOpacity
@@ -109,6 +120,7 @@ const LineItemCard = (props: LineItemCardProps) => {
             name="trash-outline"
             size={22}
             lightColor="#B3261E"
+            darkColor="#B3261E"
           />
         </TouchableOpacity>
       </View>
@@ -136,10 +148,18 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingRight: 16,
   },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8, // mb-1
+  },
   title: {
     fontSize: 16, // text-sm
     fontWeight: "bold", // font-bold
     marginBottom: 4,
+  },
+  editIcon: {
+    marginBottom: 8,
   },
   sku: {
     fontSize: 14, // text-xs
@@ -163,6 +183,8 @@ const styles = StyleSheet.create({
     fontSize: 14, // text-xs
     fontWeight: "bold", // font-bold
     marginHorizontal: 12, // gap-3 equivalent
+    minWidth: 24,
+    textAlign: "center",
   },
   unitPriceText: {
     fontSize: 13, // text-[10px]

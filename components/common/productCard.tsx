@@ -1,4 +1,4 @@
-import { SalesBillItem } from "@/services/saleorder";
+import { SalesBillItem } from "@/services/salesOrder";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "../themed-text";

@@ -5,6 +5,8 @@ import Button from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import Input from "@/components/ui/input";
 import ModalDrawer from "@/components/ui/modalDrawer";
+import { SalesBillItem } from "@/services/salesOrder";
+import { calculateSalesLineItem } from "@/utils/calculate";
 import { formatDateTime } from "@/utils/date";
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -24,7 +26,13 @@ const SalesBill = (props: SalesBillProps) => {
   if (!salesContextValue) {
     throw new Error("SalesContext not found. Wrap with SalesProvider.");
   }
-  const { customer, salesBillItems, setSelectedProduct } = salesContextValue;
+  const {
+    customer,
+    salesBillItems,
+    setSalesBillItems,
+    setSelectedProduct,
+    orderData,
+  } = salesContextValue;
   const [dateTime, setDateTime] = useState(formatDateTime());
   const [showCustSearchModal, setShowCustSearchModal] = useState(false);
   const [showProductSearchModal, setShowProductSearchModal] = useState(false);
@@ -36,6 +44,42 @@ const SalesBill = (props: SalesBillProps) => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+  const updateLineItem = (
+    item: SalesBillItem,
+    index: number,
+    isIncrease?: boolean,
+    isDelete?: boolean,
+  ) => {
+    setSalesBillItems((prevItems) => {
+      const updated = [...prevItems];
+
+      if (isDelete) {
+        updated.splice(index, 1);
+        return updated;
+      }
+
+      let currentItem = { ...updated[index] };
+
+      if (isIncrease === true) {
+        if (currentItem.quantity === currentItem.stock) return updated;
+        currentItem.quantity += 1;
+      }
+
+      if (isIncrease === false) {
+        if (currentItem.quantity === 1) return updated;
+        currentItem.quantity -= 1;
+      }
+
+      if (isIncrease === undefined && !isDelete) {
+        currentItem = item;
+      }
+
+      const calculated = calculateSalesLineItem(currentItem);
+      updated[index] = { ...currentItem, ...calculated };
+
+      return updated;
+    });
+  };
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.mainContainer}>
@@ -212,7 +256,7 @@ const SalesBill = (props: SalesBillProps) => {
                   darkColor="#a9c7ff"
                   style={{ fontWeight: "bold", fontSize: 18 }}
                 >
-                  Add Product
+                  Add Item
                 </ThemedText>
               </TouchableOpacity>
             </View>
@@ -222,7 +266,18 @@ const SalesBill = (props: SalesBillProps) => {
               style={[styles.contentContainer, { flex: 1 }]}
             >
               {salesBillItems?.map((item, index) => (
-                <LineItemCard key={`item.id-${index}`} item={item} />
+                <LineItemCard
+                  key={`item.id-${index}`}
+                  item={item}
+                  onDelete={() => updateLineItem(item, index, undefined, true)}
+                  onIncrease={() => updateLineItem(item, index, true)}
+                  onDecrease={() => updateLineItem(item, index, false)}
+                  onEdit={() => {
+                    setIsProductReplacement(true);
+                    setSelectedProduct(item);
+                    setShowProductSearchModal(true);
+                  }}
+                />
               ))}
               <BillSummary />
             </ThemedView>
@@ -253,7 +308,7 @@ const SalesBill = (props: SalesBillProps) => {
                   fontFamily: "Manrope",
                 }}
               >
-                &#8377;385.19
+                &#8377;{orderData?.netAmount || 0}
               </ThemedText>
             </View>
             <Button

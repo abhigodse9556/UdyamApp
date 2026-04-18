@@ -1,10 +1,16 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { SalesContext } from "../context/salesContext";
 
 const BillSummary = () => {
+  const salesContextValue = useContext(SalesContext);
+  if (!salesContextValue) {
+    throw new Error("SalesContext not found. Wrap with SalesProvider.");
+  }
+  const { orderData } = salesContextValue;
   return (
     <ThemedView
       lightColor="#f0f4f7"
@@ -25,7 +31,7 @@ const BillSummary = () => {
           darkColor="#ffffff"
           style={styles.value}
         >
-          &#8377;209.99
+          &#8377;{orderData?.grossAmount || 0.0}
         </ThemedText>
       </View>
 
@@ -81,7 +87,7 @@ const BillSummary = () => {
           darkColor="#B3261E"
           style={[styles.value, styles.errorText]}
         >
-          -&#8377;0.00
+          -&#8377;{orderData?.discountAmount || 0.0}
         </ThemedText>
       </View>
 
@@ -116,7 +122,7 @@ const BillSummary = () => {
             darkColor="#a9c7ff"
             style={styles.totalAmount}
           >
-            &#8377;385.19
+            &#8377;{orderData?.netAmount || 0.0}
           </ThemedText>
         </View>
         <ThemedView
