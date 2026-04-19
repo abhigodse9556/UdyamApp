@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "../themed-text";
 import Input from "../ui/input";
 
@@ -13,6 +13,8 @@ type SearchListProps<T> = {
   renderItem?: (item: T) => React.ReactNode;
   debounceTime?: number;
   clearOnSelect?: boolean;
+  rightIcon?: React.ReactNode;
+  onRightIconPress?: () => void;
 };
 
 function SearchList<T>({
@@ -25,6 +27,8 @@ function SearchList<T>({
   renderItem,
   debounceTime = 300,
   clearOnSelect = true,
+  rightIcon,
+  onRightIconPress = () => {},
 }: SearchListProps<T>) {
   const [query, setQuery] = useState(value || "");
   const [results, setResults] = useState<T[]>([]);
@@ -59,6 +63,8 @@ function SearchList<T>({
         placeholder={placeholder}
         value={query}
         onChangeText={setQuery}
+        rightIcon={rightIcon}
+        onRightIconPress={() => onRightIconPress()}
       />
 
       {results.length > 0 && (
@@ -66,6 +72,9 @@ function SearchList<T>({
           data={results}
           keyExtractor={(_, index) => index.toString()}
           keyboardShouldPersistTaps="always"
+          stickyHeaderIndices={[0]}
+          stickyHeaderHiddenOnScroll={false}
+          showsVerticalScrollIndicator={true}
           style={{
             maxHeight: 200,
             minHeight: 200,
@@ -104,7 +113,9 @@ function SearchList<T>({
       )}
 
       {!loading && query && results.length === 0 && (
-        <Text style={{ padding: 10 }}>No results</Text>
+        <ThemedText lightColor="#000" darkColor="#fff" style={{ padding: 10 }}>
+          No results
+        </ThemedText>
       )}
     </View>
   );

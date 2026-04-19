@@ -3,8 +3,9 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import Input from "@/components/ui/input";
 import ModalDrawer from "@/components/ui/modalDrawer";
+import { useThemeColor } from "@/hooks/use-theme-color";
+import { Customer } from "@/services/customer";
 import { SalesBillItem, saveSalesOrder } from "@/services/salesOrder";
 import { calculateSalesLineItem } from "@/utils/calculate";
 import { formatDateTime } from "@/utils/date";
@@ -14,7 +15,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { SalesContext } from "../context/salesContext";
 import BillSummary from "./billSummary";
-import CustomerSearch from "./customerSearch";
+import CustomerCard from "./customerCard";
+import CustomerModal from "./customerModal";
 import ProductSearch from "./productSearch";
 
 type SalesBillProps = {
@@ -22,19 +24,25 @@ type SalesBillProps = {
 };
 const SalesBill = (props: SalesBillProps) => {
   const { setOpenSalesBillModal } = props;
+  const backgroundColor = useThemeColor(
+    { light: "#ffffff", dark: "#101010" },
+    "background",
+  );
   const salesContextValue = useContext(SalesContext);
   if (!salesContextValue) {
     throw new Error("SalesContext not found. Wrap with SalesProvider.");
   }
   const {
     customer,
+    setCustomer,
     salesBillItems,
     setSalesBillItems,
     setSelectedProduct,
     orderData,
   } = salesContextValue;
   const [dateTime, setDateTime] = useState(formatDateTime(undefined, true));
-  const [showCustSearchModal, setShowCustSearchModal] = useState(false);
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
+  const [isEditCustomer, setIsEditCustomer] = useState(false);
   const [showProductSearchModal, setShowProductSearchModal] = useState(false);
   const [isProductReplacement, setIsProductReplacement] = useState(false);
 
@@ -103,8 +111,8 @@ const SalesBill = (props: SalesBillProps) => {
   };
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.mainContainer}>
+    <SafeAreaProvider style={{ backgroundColor }}>
+      <SafeAreaView style={[styles.mainContainer]}>
         <ThemedView
           lightColor="#ffffff"
           darkColor="#000000"
@@ -112,7 +120,7 @@ const SalesBill = (props: SalesBillProps) => {
         >
           <ThemedView
             lightColor="rgb(255, 255, 255)"
-            darkColor="#1a1c1f"
+            darkColor="#101010"
             style={styles.headerContainer}
           >
             <View
@@ -123,7 +131,13 @@ const SalesBill = (props: SalesBillProps) => {
                 marginLeft: 4,
               }}
             >
-              <TouchableOpacity onPress={() => setOpenSalesBillModal(false)}>
+              <TouchableOpacity
+                onPress={() => {
+                  setOpenSalesBillModal(false);
+                  setSalesBillItems([]);
+                  setCustomer({} as Customer);
+                }}
+              >
                 <IconSymbol
                   name="arrow-left"
                   type="AntDesign"
@@ -175,74 +189,37 @@ const SalesBill = (props: SalesBillProps) => {
                 >
                   Customer Details
                 </ThemedText>
-                <ThemedText
-                  lightColor="#4059aa"
-                  darkColor="#a9c7ff"
-                  style={{ fontWeight: "bold", fontSize: 16 }}
-                >
-                  Step 1 of 2
-                </ThemedText>
-              </View>
-
-              <ThemedView
-                lightColor="#f0f4f7"
-                darkColor="#282a2d"
-                style={styles.custContainerRow1}
-              >
-                <Input
-                  label="Customer Name"
-                  placeholder="Customer Name"
-                  value={customer?.name}
-                  // outerContainerStyle={{ flex: 1 }}
-                  // readOnly
-                  rightIcon={
-                    customer?.name ? (
-                      <IconSymbol
-                        name="edit"
-                        type="AntDesign"
-                        size={20}
-                        lightColor="#566166"
-                        // darkColor="#000"
-                      />
-                    ) : (
-                      <IconSymbol
-                        name="add-user"
-                        type="Entypo"
-                        size={20}
-                        lightColor="#566166"
-                        // darkColor="#000"
-                      />
-                    )
-                  }
-                  onRightIconPress={() => {
-                    setShowCustSearchModal(true);
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsEditCustomer(true);
+                    setShowCustomerModal(true);
                   }}
-                />
-                <Input
-                  label="Phone Number"
-                  placeholder="Phone Number"
-                  value={customer?.phone}
-                  // outerContainerStyle={{ flex: 1 }}
-                  readOnly
-                  rightIcon={
-                    customer?.phone ? (
-                      <IconSymbol
-                        name="edit"
-                        type="AntDesign"
-                        size={20}
-                        lightColor="#566166"
-                      />
-                    ) : (
-                      <IconSymbol
-                        name="add-call"
-                        type="MaterialIcons"
-                        size={20}
-                        lightColor="#566166"
-                      />
-                    )
+                  style={
+                    customer?.name
+                      ? { flexDirection: "row", gap: 2, alignItems: "center" }
+                      : { display: "none" }
                   }
-                />
-              </ThemedView>
+                >
+                  <IconSymbol
+                    name="edit"
+                    type="AntDesign"
+                    size={20}
+                    lightColor="#4059aa"
+                    darkColor="#a9c7ff"
+                  />
+                  <ThemedText
+                    lightColor="#4059aa"
+                    darkColor="#a9c7ff"
+                    style={{ fontWeight: "bold", fontSize: 16 }}
+                  >
+                    Edit Info
+                  </ThemedText>
+                </TouchableOpacity>
+              </View>
+              <CustomerCard
+                customer={customer}
+                onPress={() => setShowCustomerModal(true)}
+              />
             </ThemedView>
             <View
               style={{
@@ -356,11 +333,14 @@ const SalesBill = (props: SalesBillProps) => {
           </ThemedView>
         </ThemedView>
         <ModalDrawer
-          isVisible={showCustSearchModal}
-          onClose={() => setShowCustSearchModal(false)}
+          isVisible={showCustomerModal}
+          onClose={() => setShowCustomerModal(false)}
           style={{ justifyContent: "flex-end" }}
         >
-          <CustomerSearch setShowCustSearchModal={setShowCustSearchModal} />
+          <CustomerModal
+            setShowCustomerModal={setShowCustomerModal}
+            isEditCustomer={isEditCustomer}
+          />
         </ModalDrawer>
         <ModalDrawer
           isVisible={showProductSearchModal}
@@ -394,9 +374,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: 10,
   },
-  custContainerRow1: {
-    justifyContent: "space-between",
-    gap: 10,
+  custContainer: {
+    flexDirection: "row",
+    gap: 20,
     padding: 20,
     borderRadius: 8,
   },

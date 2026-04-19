@@ -1,3 +1,4 @@
+import { trimObjectStrings } from "@/utils/generic";
 import generateId from "@/utils/idGenerator";
 import { getItem, setItem } from "../utils/storage";
 
@@ -61,9 +62,8 @@ export const saveCustomer = async (data: Customer) => {
     createdAt: timestamp,
     updatedAt: timestamp,
   };
-
-  const updatedCustomers = [...existingCustomers, newCustomer];
-
+  const cleanedData = trimObjectStrings(newCustomer);
+  const updatedCustomers = [...existingCustomers, cleanedData];
   await setItem(CUSTOMER_KEY, updatedCustomers);
 };
 
@@ -144,10 +144,10 @@ export const getCustomersByName = async (
 // Update product
 export const updateCustomer = async (data: Partial<Customer>) => {
   const products = (await getAllCustomers()) || [];
-
+  const cleanedData = trimObjectStrings(data);
   const updatedCustomers = products.map((c) =>
-    c.id === data.id
-      ? { ...c, ...data, updatedAt: new Date().toISOString() }
+    c.id === cleanedData.id
+      ? { ...c, ...cleanedData, updatedAt: new Date().toISOString() }
       : c,
   );
 

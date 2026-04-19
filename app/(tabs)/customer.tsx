@@ -171,7 +171,8 @@ const CustomerScreen = () => {
                     <Button
                       title="Add Customer"
                       onPress={() => setShowCustomerForm(true)}
-                      color="green"
+                      lightColor="green"
+                      darkColor="green"
                     />
                   </ThemedView>
                 )}
@@ -189,12 +190,14 @@ const CustomerScreen = () => {
               <Button
                 title="Add Customer"
                 onPress={() => setShowCustomerForm(true)}
-                color="green"
+                lightColor="green"
+                darkColor="green"
               />
               <Button
                 title="Clear All Customers"
                 onPress={() => clearAllCustomers().then(() => fetchCustomers())}
-                color="red"
+                lightColor="red"
+                darkColor="red"
               />
             </ThemedView>
           </ThemedView>

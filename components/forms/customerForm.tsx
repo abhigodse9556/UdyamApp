@@ -13,6 +13,7 @@ import {
   saveCustomer,
   updateCustomer,
 } from "../../services/customer";
+import { ThemedText } from "../themed-text";
 import ExpoCheckBox from "../ui/expoCheckbox";
 import { IconSymbol } from "../ui/icon-symbol";
 import SearchSelect from "../ui/searchSelect";
@@ -21,7 +22,7 @@ import Select from "../ui/select";
 type CustomerFormProps = {
   isEditMode?: boolean;
   customerData?: Customer;
-  onClose: (updated?: boolean) => void;
+  onClose: (updated?: boolean, customerData?: Customer) => void;
 };
 
 const CustomerForm = ({
@@ -92,7 +93,7 @@ const CustomerForm = ({
     } else {
       await updateCustomer(formData as Customer);
     }
-    onClose(true);
+    onClose(true, formData as Customer);
   };
 
   const getReferralCustomer = async (customerId: string) => {
@@ -118,9 +119,9 @@ const CustomerForm = ({
       <SafeAreaView style={styles.centeredView}>
         <View style={styles.mainContainer}>
           <View style={styles.titleContainer}>
-            <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+            <ThemedText type="title" lightColor="black" darkColor="white">
               {isEditMode ? "Edit Customer" : "Add New Customer"}
-            </Text>
+            </ThemedText>
           </View>
           <KeyboardAwareScrollView
             style={{ flex: 1 }}
@@ -176,6 +177,8 @@ const CustomerForm = ({
                 label="Address"
                 value={formData.address}
                 onChangeText={(text) => handleInputChange("address", text)}
+                multiline
+                numberOfLines={5}
               />
               <ExpoCheckBox
                 label={
@@ -212,15 +215,23 @@ const CustomerForm = ({
                     <Input
                       label="Referred By"
                       value={referralSourceName}
-                      editable={false}
+                      readOnly
                       rightIcon={
                         referralSourceName === "" ? (
-                          <IconSymbol size={24} name="add-user" type="Entypo" />
+                          <IconSymbol
+                            size={24}
+                            name="add-user"
+                            type="Entypo"
+                            lightColor="black"
+                            darkColor="white"
+                          />
                         ) : (
                           <IconSymbol
                             size={24}
                             name="user-edit"
                             type="FontAwesome5"
+                            lightColor="black"
+                            darkColor="white"
                           />
                         )
                       }
@@ -324,7 +335,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
-    gap: 0,
+    gap: 8,
     padding: 15,
   },
   btnContainer: {

@@ -18,6 +18,7 @@ type Props = TextInputProps & {
   rightIcon?: React.ReactNode;
   onRightIconPress?: () => void;
   outerContainerStyle?: object;
+  multiline?: boolean;
   inputRef?: React.RefObject<TextInput | null>;
 };
 
@@ -32,6 +33,7 @@ const Input = ({
   onRightIconPress,
   style,
   editable = true,
+  multiline = false,
   outerContainerStyle = {},
   ...props
 }: Props) => {
@@ -84,6 +86,7 @@ const Input = ({
             styles.input,
             style,
             { color: theme === "light" ? "#000" : "#fff" },
+            multiline && { height: 100, textAlignVertical: "top" },
           ]}
           placeholderTextColor="#999"
           onFocus={(e) => {
@@ -95,6 +98,7 @@ const Input = ({
             props.onBlur?.(e);
           }}
           editable={editable}
+          multiline={multiline}
         />
 
         {rightIcon && (

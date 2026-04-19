@@ -158,7 +158,8 @@ const ProductScreen = () => {
                     <Button
                       title="Add Product"
                       onPress={() => setShowProductForm(true)}
-                      color="green"
+                      lightColor="green"
+                      darkColor="green"
                     />
                   </ThemedView>
                 )}
@@ -174,12 +175,14 @@ const ProductScreen = () => {
               <Button
                 title="Add Product"
                 onPress={() => setShowProductForm(true)}
-                color="green"
+                lightColor="green"
+                darkColor="green"
               />
               <Button
                 title="Clear All Products"
                 onPress={() => clearAllProducts().then(() => fetchProducts())}
-                color="red"
+                lightColor="red"
+                darkColor="red"
               />
             </ThemedView>
           </ThemedView>
