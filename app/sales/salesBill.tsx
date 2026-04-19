@@ -33,14 +33,14 @@ const SalesBill = (props: SalesBillProps) => {
     setSelectedProduct,
     orderData,
   } = salesContextValue;
-  const [dateTime, setDateTime] = useState(formatDateTime());
+  const [dateTime, setDateTime] = useState(formatDateTime(undefined, true));
   const [showCustSearchModal, setShowCustSearchModal] = useState(false);
   const [showProductSearchModal, setShowProductSearchModal] = useState(false);
   const [isProductReplacement, setIsProductReplacement] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setDateTime(formatDateTime());
+      setDateTime(formatDateTime(undefined, true));
     }, 1000);
     return () => clearInterval(interval);
   }, []);

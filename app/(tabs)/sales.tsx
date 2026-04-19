@@ -1,6 +1,7 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
+import { IconSymbol } from "@/components/ui/icon-symbol";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import {
   clearAllSalesOrders,
@@ -9,16 +10,16 @@ import {
 } from "@/services/salesOrder";
 import { getShopOwner, ShopOwner } from "@/services/shopOwner";
 import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import ModalDrawer from "../../components/ui/modalDrawer";
 import SalesProvider from "../context/salesContext";
 import SalesBill from "../sales/salesBill";
-import SalesCard from "../sales/salesCard";
+import SalesLedgerCard from "../sales/salesLedgerCard";
 
 const SalesScreen = () => {
   const backgroundColor = useThemeColor(
-    { light: "#ffffff", dark: "#000000" },
+    { light: "#ffffff", dark: "#101010" },
     "background",
   );
   const [shopData, setShopData] = useState({} as ShopOwner);
@@ -52,43 +53,57 @@ const SalesScreen = () => {
         <SafeAreaView style={styles.mainContainer}>
           <ThemedView
             lightColor="#ffffff"
-            darkColor="#000000"
-            style={{ padding: 6 }}
+            darkColor="#101010"
+            style={styles.headerContainer}
           >
-            <ThemedView
-              lightColor="#ffffff"
-              darkColor="#101010"
-              style={styles.headerContainer}
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
             >
+              <IconSymbol
+                size={28}
+                name="menu"
+                type="MaterialIcons"
+                lightColor="#4059aa"
+                darkColor="#4059aa"
+              />
               <ThemedText
-                lightColor="#000000"
-                darkColor="#ffffff"
+                lightColor="#4059aa"
+                darkColor="#4059aa"
+                type="subtitle"
                 style={{ fontWeight: "bold" }}
               >
-                {shopData.shopName || "Your Shop Name"}
+                Sales Ledger
               </ThemedText>
-            </ThemedView>
-            <View>
-              {orders.map((order, index) => (
-                <SalesCard key={order.id} index={index} salesOrder={order} />
-              ))}
             </View>
-            <ThemedView
-              lightColor="#ffffff"
-              darkColor="#101010"
-              style={styles.buttonContainer}
+            <ThemedText
+              lightColor="#000000"
+              darkColor="#ffffff"
+              style={{ fontWeight: "bold" }}
             >
-              <Button
-                title="Create New Sales Bill"
-                onPress={() => setOpenSalesBillModal(true)}
-              />
-              <Button
-                title="Clear All Sales Bills"
-                onPress={() => clearAllSalesOrders()}
-                darkColor="red"
-                lightColor="red"
-              />
-            </ThemedView>
+              {shopData.shopName || "Your Shop Name"}
+            </ThemedText>
+          </ThemedView>
+          <ScrollView style={styles.ledgerContainer}>
+            {orders.map((order, index) => (
+              // <SalesCard key={order.id} index={index} salesOrder={order} />
+              <SalesLedgerCard key={order.id} ledgerData={order} />
+            ))}
+          </ScrollView>
+          <ThemedView
+            lightColor="#ffffff"
+            darkColor="#101010"
+            style={styles.buttonContainer}
+          >
+            <Button
+              title="Create New Sales Bill"
+              onPress={() => setOpenSalesBillModal(true)}
+            />
+            <Button
+              title="Clear All Sales Bills"
+              onPress={() => clearAllSalesOrders()}
+              darkColor="red"
+              lightColor="red"
+            />
           </ThemedView>
           <ModalDrawer
             isVisible={openSalesBillModal}
@@ -111,7 +126,16 @@ const styles = StyleSheet.create({
     padding: 0,
     justifyContent: "space-between",
   },
-  headerContainer: { padding: 6, borderRadius: 8 },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 6,
+    borderRadius: 8,
+  },
+  ledgerContainer: {
+    flex: 1,
+  },
   buttonContainer: {
     padding: 6,
     borderRadius: 8,
@@ -120,6 +144,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    height: 50,
   },
 });
 

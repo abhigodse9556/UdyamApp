@@ -3,7 +3,12 @@
 /**
  * Formats date like: 12 APR 2026 12:44 PM
  */
-export const formatDateTime = (date: Date = new Date()): string => {
+export const formatDateTime = (
+  input: Date | string = new Date(),
+  showSeconds?: boolean,
+): string => {
+  const date = typeof input === "string" ? new Date(input) : input;
+
   const day = date.getDate().toString().padStart(2, "0");
 
   const month = date.toLocaleString("en-GB", { month: "short" }).toUpperCase();
@@ -14,8 +19,9 @@ export const formatDateTime = (date: Date = new Date()): string => {
     .toLocaleTimeString("en-GB", {
       hour: "2-digit",
       minute: "2-digit",
-      second: "2-digit",
+      second: showSeconds ? "2-digit" : undefined,
       hour12: true,
+      hourCycle: "h12",
     })
     .replace("am", "AM")
     .replace("pm", "PM");
