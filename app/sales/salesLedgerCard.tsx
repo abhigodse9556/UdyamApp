@@ -93,7 +93,7 @@ const SalesLedgerCard = (props: SalesLedgerCardProps) => {
             darkColor="#ffffff"
             style={styles.customerName}
           >
-            {customer.name}
+            {customer.name || "Counter Sale"}
           </ThemedText>
           <ThemedText
             lightColor="#49454F"

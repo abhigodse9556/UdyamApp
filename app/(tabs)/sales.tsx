@@ -39,7 +39,19 @@ const SalesScreen = () => {
 
   const fetchSalesOrders = useCallback(async () => {
     const orders = await getAllSalesOrders();
-    setOrders(orders || []);
+    if (orders && orders?.length > 0) {
+      const sortedOrders = [...orders]?.sort((a, b) => {
+        // Convert to timestamps; fallback to 0 if date is missing
+        const dateA = new Date(a?.createdAt || 0).getTime();
+        const dateB = new Date(b?.createdAt || 0).getTime();
+
+        // Descending order: newest first (B - A)
+        return dateB - dateA;
+      });
+      setOrders(sortedOrders);
+    } else {
+      setOrders([]);
+    }
   }, []);
 
   useEffect(() => {
@@ -85,8 +97,10 @@ const SalesScreen = () => {
           </ThemedView>
           <ScrollView style={styles.ledgerContainer}>
             {orders.map((order, index) => (
-              // <SalesCard key={order.id} index={index} salesOrder={order} />
-              <SalesLedgerCard key={order.id} ledgerData={order} />
+              <SalesLedgerCard
+                key={`${order.id}_${index}`}
+                ledgerData={order}
+              />
             ))}
           </ScrollView>
           <ThemedView

@@ -50,7 +50,7 @@ const LineItemCard = (props: LineItemCardProps) => {
           </TouchableOpacity>
         </View>
         <ThemedText lightColor="#49454F" darkColor="#c2c6d4" style={styles.sku}>
-          {item.description}
+          {item?.description || ""}
         </ThemedText>
 
         <View style={styles.controlsRow}>
