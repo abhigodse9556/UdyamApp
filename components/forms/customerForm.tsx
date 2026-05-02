@@ -89,11 +89,12 @@ const CustomerForm = ({
   };
   const handleSave = async (isEditMode?: boolean) => {
     if (!isEditMode) {
-      await saveCustomer(formData as Customer);
+      const data = await saveCustomer(formData as Customer);
+      onClose(true, data);
     } else {
       await updateCustomer(formData as Customer);
+      onClose(true, formData as Customer);
     }
-    onClose(true, formData as Customer);
   };
 
   const getReferralCustomer = async (customerId: string) => {

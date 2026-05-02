@@ -65,6 +65,8 @@ export const saveCustomer = async (data: Customer) => {
   const cleanedData = trimObjectStrings(newCustomer);
   const updatedCustomers = [...existingCustomers, cleanedData];
   await setItem(CUSTOMER_KEY, updatedCustomers);
+
+  return cleanedData;
 };
 
 // Get all products
@@ -152,6 +154,8 @@ export const updateCustomer = async (data: Partial<Customer>) => {
   );
 
   await setItem(CUSTOMER_KEY, updatedCustomers);
+
+  return cleanedData;
 };
 
 export const deleteCustomer = async (id: string) => {

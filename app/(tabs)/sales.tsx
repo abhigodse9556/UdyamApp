@@ -54,6 +54,14 @@ const SalesScreen = () => {
     }
   }, []);
 
+  const onCloseSalesBillModal = useCallback(
+    (createNew: boolean = false) => {
+      if (createNew) fetchSalesOrders();
+      setOpenSalesBillModal(false);
+    },
+    [fetchSalesOrders],
+  );
+
   useEffect(() => {
     fetchShopOwner();
     fetchSalesOrders();
@@ -125,7 +133,7 @@ const SalesScreen = () => {
             animationIn="slideInRight"
             animationOut="slideOutRight"
           >
-            <SalesBill setOpenSalesBillModal={setOpenSalesBillModal} />
+            <SalesBill onCloseSalesBillModal={onCloseSalesBillModal} />
           </ModalDrawer>
         </SafeAreaView>
       </SafeAreaProvider>

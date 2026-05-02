@@ -7,7 +7,6 @@ import { IconSymbol } from "../../components/ui/icon-symbol";
 
 interface LineItemCardProps {
   item: SalesBillItem;
-  totalPrice?: string;
   onIncrease?: () => void;
   onDecrease?: () => void;
   onDelete?: () => void;
@@ -97,15 +96,15 @@ const LineItemCard = (props: LineItemCardProps) => {
             >
               &#8377;{item.soldAtRate}
             </ThemedText>
-            {item.givenDiscPercent && (
+            {item?.givenDiscPercent ? (
               <ThemedText
                 lightColor="#ff0000"
                 darkColor="#f75353"
                 style={styles.unitDiscountText}
               >
-                {item.givenDiscPercent}%
+                {item?.givenDiscPercent}%
               </ThemedText>
-            )}
+            ) : null}
           </View>
         </View>
       </View>

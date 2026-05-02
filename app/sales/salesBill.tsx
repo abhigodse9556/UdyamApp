@@ -20,10 +20,10 @@ import CustomerModal from "./customerModal";
 import ProductSearch from "./productSearch";
 
 type SalesBillProps = {
-  setOpenSalesBillModal: (bool: boolean) => void;
+  onCloseSalesBillModal: (bool: boolean) => void;
 };
 const SalesBill = (props: SalesBillProps) => {
-  const { setOpenSalesBillModal } = props;
+  const { onCloseSalesBillModal } = props;
   const backgroundColor = useThemeColor(
     { light: "#ffffff", dark: "#101010" },
     "background",
@@ -107,7 +107,7 @@ const SalesBill = (props: SalesBillProps) => {
       ],
     };
     await saveSalesOrder(updated as any);
-    setOpenSalesBillModal(false);
+    onCloseSalesBillModal(true);
   };
 
   return (
@@ -133,7 +133,7 @@ const SalesBill = (props: SalesBillProps) => {
             >
               <TouchableOpacity
                 onPress={() => {
-                  setOpenSalesBillModal(false);
+                  onCloseSalesBillModal(false);
                   setSalesBillItems([]);
                   setCustomer({} as Customer);
                 }}
