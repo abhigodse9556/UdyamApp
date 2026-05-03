@@ -13,6 +13,7 @@ type ButtonProps = {
   buttonContainerStyle?: object;
   titleStyle?: object;
   rightIcon?: React.ReactNode;
+  leftIcon?: React.ReactNode;
 };
 
 const Button = (props: ButtonProps) => {
@@ -25,6 +26,7 @@ const Button = (props: ButtonProps) => {
     style,
     titleStyle,
     rightIcon,
+    leftIcon,
     buttonContainerStyle,
   } = props;
   return (
@@ -46,6 +48,7 @@ const Button = (props: ButtonProps) => {
         onPress={onPress}
         disabled={disabled}
       >
+        {leftIcon && <>{leftIcon}</>}
         <ThemedText
           lightColor="#fff"
           darkColor="#003063"

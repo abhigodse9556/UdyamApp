@@ -3,19 +3,16 @@ import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { useThemeColor } from "@/hooks/use-theme-color";
-import {
-  clearAllSalesOrders,
-  getAllSalesOrders,
-  SalesOrder,
-} from "@/services/salesOrder";
+import { getAllSalesOrders, SalesOrder } from "@/services/salesOrder";
 import { getShopOwner, ShopOwner } from "@/services/shopOwner";
 import { useCallback, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import ModalDrawer from "../../components/ui/modalDrawer";
 import SalesProvider from "../context/salesContext";
 import SalesBill from "../sales/salesBill";
 import SalesLedgerCard from "../sales/salesLedgerCard";
+import SalesLeftDrawer from "../sales/salesLeftDrawer";
 
 const SalesScreen = () => {
   const backgroundColor = useThemeColor(
@@ -24,6 +21,7 @@ const SalesScreen = () => {
   );
   const [shopData, setShopData] = useState({} as ShopOwner);
   const [openSalesBillModal, setOpenSalesBillModal] = useState(false);
+  const [openLeftDrawer, setOpenLeftDrawer] = useState(false);
   const [orders, setOrders] = useState<SalesOrder[]>([]);
   const [currentOrderId, setCurrentOrderId] = useState<SalesOrder["id"]>(
     "" as SalesOrder["id"],
@@ -85,13 +83,15 @@ const SalesScreen = () => {
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
             >
-              <IconSymbol
-                size={28}
-                name="menu"
-                type="MaterialIcons"
-                lightColor="#4059aa"
-                darkColor="#4059aa"
-              />
+              <TouchableOpacity onPress={() => setOpenLeftDrawer(true)}>
+                <IconSymbol
+                  size={28}
+                  name="menu"
+                  type="MaterialIcons"
+                  lightColor="#4059aa"
+                  darkColor="#4059aa"
+                />
+              </TouchableOpacity>
               <ThemedText
                 lightColor="#4059aa"
                 darkColor="#4059aa"
@@ -121,25 +121,23 @@ const SalesScreen = () => {
               />
             ))}
           </ScrollView>
-          <ThemedView
-            lightColor="#ffffff"
-            darkColor="#101010"
-            style={styles.buttonContainer}
-          >
+          <View style={styles.buttonContainer}>
             <Button
-              title="Create New Sales Bill"
+              title="Add New"
+              leftIcon={
+                <IconSymbol
+                  name="add"
+                  type="MaterialIcons"
+                  lightColor="#ffffff"
+                />
+              }
               onPress={() => {
                 setCurrentOrderId("");
                 setOpenSalesBillModal(true);
               }}
+              buttonContainerStyle={{ width: 100 }}
             />
-            <Button
-              title="Clear All Sales Bills"
-              onPress={() => clearAllSalesOrders()}
-              darkColor="red"
-              lightColor="red"
-            />
-          </ThemedView>
+          </View>
           <ModalDrawer
             isVisible={openSalesBillModal}
             onClose={() => {
@@ -152,6 +150,16 @@ const SalesScreen = () => {
               onCloseSalesBillModal={onCloseSalesBillModal}
               orderId={currentOrderId}
             />
+          </ModalDrawer>
+          <ModalDrawer
+            isVisible={openLeftDrawer}
+            onClose={() => {
+              setOpenLeftDrawer(false);
+            }}
+            animationIn="slideInLeft"
+            animationOut="slideOutLeft"
+          >
+            <SalesLeftDrawer onClose={() => setOpenLeftDrawer(false)} />
           </ModalDrawer>
         </SafeAreaView>
       </SafeAreaProvider>
@@ -177,14 +185,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    padding: 6,
-    borderRadius: 8,
-    marginTop: 6,
-    gap: 6,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
-    height: 50,
+    position: "absolute",
+    bottom: 20,
+    right: 20,
   },
 });
 
