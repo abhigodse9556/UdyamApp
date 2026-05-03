@@ -1,9 +1,14 @@
+import Confirm from "@/components/common/confirmationModal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { useThemeColor } from "@/hooks/use-theme-color";
-import { getAllSalesOrders, SalesOrder } from "@/services/salesOrder";
+import {
+  deleteSalesOrder,
+  getAllSalesOrders,
+  SalesOrder,
+} from "@/services/salesOrder";
 import { getShopOwner, ShopOwner } from "@/services/shopOwner";
 import { useCallback, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -26,6 +31,7 @@ const SalesScreen = () => {
   const [currentOrderId, setCurrentOrderId] = useState<SalesOrder["id"]>(
     "" as SalesOrder["id"],
   );
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
 
   const fetchShopOwner = useCallback(async () => {
     const owner = await getShopOwner();
@@ -65,6 +71,13 @@ const SalesScreen = () => {
     },
     [fetchSalesOrders],
   );
+
+  const deleteOrder = useCallback(async () => {
+    if (!currentOrderId) return;
+    await deleteSalesOrder(currentOrderId || "");
+    fetchSalesOrders();
+    setShowDeleteConfirmModal(false);
+  }, [currentOrderId, fetchSalesOrders]);
 
   useEffect(() => {
     fetchShopOwner();
@@ -118,6 +131,10 @@ const SalesScreen = () => {
                   setCurrentOrderId(currentOrderId);
                   setOpenSalesBillModal(true);
                 }}
+                onDelete={(currentOrderId) => {
+                  setCurrentOrderId(currentOrderId);
+                  setShowDeleteConfirmModal(true);
+                }}
               />
             ))}
           </ScrollView>
@@ -161,6 +178,15 @@ const SalesScreen = () => {
           >
             <SalesLeftDrawer onClose={() => setOpenLeftDrawer(false)} />
           </ModalDrawer>
+          <Confirm
+            onConfirm={() => deleteOrder()}
+            onCancel={() => {
+              setShowDeleteConfirmModal(false);
+            }}
+            visible={showDeleteConfirmModal}
+            title="Delete order"
+            message="Are you sure, you want to delete this order?"
+          />
         </SafeAreaView>
       </SafeAreaProvider>
     </SalesProvider>

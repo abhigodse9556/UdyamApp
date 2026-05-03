@@ -24,9 +24,10 @@ import { Menu } from "react-native-paper";
 type SalesLedgerCardProps = {
   ledgerData: SalesOrder;
   onEdit: (currentLedgerId: SalesOrder["id"]) => void;
+  onDelete: (currentLedgerId: SalesOrder["id"]) => void;
 };
 const SalesLedgerCard = (props: SalesLedgerCardProps) => {
-  const { ledgerData, onEdit } = props;
+  const { ledgerData, onEdit, onDelete } = props;
   const [status, setStatus] = useState("");
   const [customer, setCustomer] = useState<Customer>({} as Customer);
   const [showMoreActions, setShowMoreActions] = useState(false);
@@ -239,7 +240,7 @@ const SalesLedgerCard = (props: SalesLedgerCardProps) => {
             <Menu.Item
               onPress={() => {
                 setShowMoreActions(false);
-                // call delete
+                onDelete(ledgerData.id);
               }}
               leadingIcon={() => (
                 <IconSymbol

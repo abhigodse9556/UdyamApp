@@ -70,7 +70,8 @@ export const saveSalesOrder = async (data: SalesOrder) => {
 
 // Get all saleSalesOrders
 export const getAllSalesOrders = async (): Promise<SalesOrder[] | null> => {
-  return await getItem(ORDER_KEY);
+  const orders = await getItem(ORDER_KEY);
+  return orders.filter((o: SalesOrder) => !o.deleted) || null;
 };
 
 export const getSalesOrderById = async (
@@ -108,7 +109,7 @@ export const deleteSalesOrder = async (id: string) => {
 // Clear all saleSalesOrders (optional)
 export const clearAllSalesOrders = async () => {
   await setItem(ORDER_KEY, null);
-  await setItem("ORDER_ID_SEQ", 0); // Reset ID sequence
+  await setItem("SALE_ORDER_ID_SEQ", 0); // Reset ID sequence
   await setItem("SALE_ORDER_INVOICE_NUMBER_SEQ", 0);
   await setItem("SALE_ORDER_ITEM_ID_SEQ", 0);
 };

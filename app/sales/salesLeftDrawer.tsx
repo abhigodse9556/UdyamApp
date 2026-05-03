@@ -1,8 +1,9 @@
+import Confirm from "@/components/common/confirmationModal";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { clearAllSalesOrders } from "@/services/salesOrder";
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 type leftDrawerProps = {
@@ -10,6 +11,7 @@ type leftDrawerProps = {
 };
 const SalesLeftDrawer = (props: leftDrawerProps) => {
   const { onClose } = props;
+  const [showConfirm, setShowConfirm] = useState(false);
   return (
     <ThemedView
       lightColor="#ffffff"
@@ -34,9 +36,20 @@ const SalesLeftDrawer = (props: leftDrawerProps) => {
       </TouchableOpacity>
       <Button
         title="Clear All Sales Bills"
-        onPress={() => clearAllSalesOrders()}
+        onPress={() => setShowConfirm(true)}
         darkColor="red"
         lightColor="red"
+      />
+      <Confirm
+        visible={showConfirm}
+        title="Clear All Sales Bills?"
+        message="This will delete all sales bills and cannot be undone!"
+        onConfirm={() => {
+          clearAllSalesOrders();
+          setShowConfirm(false);
+          onClose();
+        }}
+        onCancel={() => setShowConfirm(false)}
       />
     </ThemedView>
   );
