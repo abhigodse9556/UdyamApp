@@ -1,11 +1,12 @@
 import SearchList from "@/components/common/searchList";
 import CustomerForm from "@/components/forms/customerForm";
+import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Button from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Customer, getCustomersByName } from "@/services/customer";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { SalesContext } from "../context/salesContext";
 
 type CustomerModalProps = {
@@ -86,6 +87,35 @@ const CustomerModal = (props: CustomerModalProps) => {
         </View>
       ) : (
         <View style={{ paddingTop: 20, height: "100%" }}>
+          <TouchableOpacity
+            onPress={() => {
+              setShowCustForm(false);
+            }}
+            style={{
+              flexDirection: "row-reverse",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              gap: 5,
+              position: "absolute",
+              top: 10,
+              right: 10,
+            }}
+          >
+            <IconSymbol
+              name="change-circle"
+              type="MaterialIcons"
+              size={24}
+              lightColor="#4059aa"
+              darkColor="#a9c7ff"
+            />
+            <ThemedText
+              lightColor="#4059aa"
+              darkColor="#a9c7ff"
+              style={{ fontWeight: "bold", fontSize: 16 }}
+            >
+              Change Customer
+            </ThemedText>
+          </TouchableOpacity>
           <CustomerForm
             customerData={customer}
             isEditMode={isEditCustomer}

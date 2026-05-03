@@ -10,6 +10,7 @@ type ButtonProps = {
   darkColor?: string;
   disabled?: boolean;
   style?: object;
+  buttonContainerStyle?: object;
   titleStyle?: object;
   rightIcon?: React.ReactNode;
 };
@@ -24,12 +25,13 @@ const Button = (props: ButtonProps) => {
     style,
     titleStyle,
     rightIcon,
+    buttonContainerStyle,
   } = props;
   return (
     <ThemedView
       lightColor={lightColor}
       darkColor={darkColor}
-      style={[styles.container]}
+      style={[styles.container, buttonContainerStyle]}
     >
       {/* Custom TouchableOpacity Button */}
       <TouchableOpacity

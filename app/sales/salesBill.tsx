@@ -125,8 +125,8 @@ const SalesBill = (props: SalesBillProps) => {
     } else {
       await updateSalesOrder(updated as any);
     }
-    resetBill();
     onCloseSalesBillModal(true);
+    resetBill();
   };
 
   const fetchOrderItems = async (order: SalesOrder) => {
@@ -366,7 +366,7 @@ const SalesBill = (props: SalesBillProps) => {
               </ThemedText>
             </View>
             <Button
-              title="Generate Bill"
+              title={orderId ? "Update Bill" : "Generate Bill"}
               titleStyle={{ fontSize: 20 }}
               style={{
                 paddingHorizontal: 40,
