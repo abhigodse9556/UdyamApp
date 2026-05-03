@@ -25,6 +25,9 @@ const SalesScreen = () => {
   const [shopData, setShopData] = useState({} as ShopOwner);
   const [openSalesBillModal, setOpenSalesBillModal] = useState(false);
   const [orders, setOrders] = useState<SalesOrder[]>([]);
+  const [currentOrderId, setCurrentOrderId] = useState<SalesOrder["id"]>(
+    "" as SalesOrder["id"],
+  );
 
   const fetchShopOwner = useCallback(async () => {
     const owner = await getShopOwner();
@@ -58,6 +61,7 @@ const SalesScreen = () => {
     (createNew: boolean = false) => {
       if (createNew) fetchSalesOrders();
       setOpenSalesBillModal(false);
+      setCurrentOrderId("");
     },
     [fetchSalesOrders],
   );
@@ -108,6 +112,10 @@ const SalesScreen = () => {
               <SalesLedgerCard
                 key={`${order.id}_${index}`}
                 ledgerData={order}
+                onEdit={(currentOrderId) => {
+                  setCurrentOrderId(currentOrderId);
+                  setOpenSalesBillModal(true);
+                }}
               />
             ))}
           </ScrollView>
@@ -118,7 +126,10 @@ const SalesScreen = () => {
           >
             <Button
               title="Create New Sales Bill"
-              onPress={() => setOpenSalesBillModal(true)}
+              onPress={() => {
+                setCurrentOrderId("");
+                setOpenSalesBillModal(true);
+              }}
             />
             <Button
               title="Clear All Sales Bills"
@@ -129,11 +140,16 @@ const SalesScreen = () => {
           </ThemedView>
           <ModalDrawer
             isVisible={openSalesBillModal}
-            onClose={() => setOpenSalesBillModal(false)}
+            onClose={() => {
+              onCloseSalesBillModal();
+            }}
             animationIn="slideInRight"
             animationOut="slideOutRight"
           >
-            <SalesBill onCloseSalesBillModal={onCloseSalesBillModal} />
+            <SalesBill
+              onCloseSalesBillModal={onCloseSalesBillModal}
+              orderId={currentOrderId}
+            />
           </ModalDrawer>
         </SafeAreaView>
       </SafeAreaProvider>

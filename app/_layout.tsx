@@ -7,6 +7,7 @@ import {
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-get-random-values";
+import { Provider as PaperProvider } from "react-native-paper";
 import "react-native-reanimated";
 
 // export const unstable_settings = {
@@ -18,20 +19,22 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        {/* Entry point */}
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        {/* Register screen */}
-        <Stack.Screen name="register" options={{ headerShown: false }} />
-        {/* Tabs */}
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        {/* Modal */}
-        <Stack.Screen
-          name="modal"
-          options={{ presentation: "modal", title: "Modal" }}
-        />
-      </Stack>
-      <StatusBar style="auto" />
+      <PaperProvider>
+        <Stack>
+          {/* Entry point */}
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          {/* Register screen */}
+          <Stack.Screen name="register" options={{ headerShown: false }} />
+          {/* Tabs */}
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          {/* Modal */}
+          <Stack.Screen
+            name="modal"
+            options={{ presentation: "modal", title: "Modal" }}
+          />
+        </Stack>
+        <StatusBar style="auto" />
+      </PaperProvider>
     </ThemeProvider>
   );
 }

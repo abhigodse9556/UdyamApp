@@ -5,8 +5,15 @@ import Button from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import ModalDrawer from "@/components/ui/modalDrawer";
 import { useThemeColor } from "@/hooks/use-theme-color";
-import { Customer } from "@/services/customer";
-import { SalesBillItem, saveSalesOrder } from "@/services/salesOrder";
+import { Customer, getCustomerById } from "@/services/customer";
+import { getProductById } from "@/services/product";
+import {
+  getSalesOrderById,
+  SalesBillItem,
+  SalesOrder,
+  saveSalesOrder,
+  updateSalesOrder,
+} from "@/services/salesOrder";
 import { calculateSalesLineItem } from "@/utils/calculate";
 import { formatDateTime } from "@/utils/date";
 import { useContext, useEffect, useState } from "react";
@@ -21,9 +28,10 @@ import ProductSearch from "./productSearch";
 
 type SalesBillProps = {
   onCloseSalesBillModal: (bool: boolean) => void;
+  orderId?: string;
 };
 const SalesBill = (props: SalesBillProps) => {
-  const { onCloseSalesBillModal } = props;
+  const { onCloseSalesBillModal, orderId } = props;
   const backgroundColor = useThemeColor(
     { light: "#ffffff", dark: "#101010" },
     "background",
@@ -46,12 +54,6 @@ const SalesBill = (props: SalesBillProps) => {
   const [showProductSearchModal, setShowProductSearchModal] = useState(false);
   const [isProductReplacement, setIsProductReplacement] = useState(false);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDateTime(formatDateTime(undefined, true));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
   const updateLineItem = (
     item: SalesBillItem,
     index: number,
@@ -89,8 +91,20 @@ const SalesBill = (props: SalesBillProps) => {
     });
   };
 
+  const resetBill = () => {
+    setSalesBillItems([]);
+    setCustomer({} as Customer);
+    setDateTime(formatDateTime(undefined, true));
+    setSelectedProduct({} as SalesBillItem);
+    setShowCustomerModal(false);
+    setShowProductSearchModal(false);
+    setIsProductReplacement(false);
+    setIsEditCustomer(false);
+  };
+
   const generateBill = async () => {
     const updated = {
+      id: orderId || undefined,
       customerId: orderData.customerId,
       grossAmount: orderData.grossAmount,
       netAmount: orderData.netAmount,
@@ -106,9 +120,50 @@ const SalesBill = (props: SalesBillProps) => {
         })),
       ],
     };
-    await saveSalesOrder(updated as any);
+    if (!orderId) {
+      await saveSalesOrder(updated as any);
+    } else {
+      await updateSalesOrder(updated as any);
+    }
+    resetBill();
     onCloseSalesBillModal(true);
   };
+
+  const fetchOrderItems = async (order: SalesOrder) => {
+    const items = await Promise.all(
+      order.items.map(async (item) => {
+        const product = await getProductById(item.productId);
+        const calculated = calculateSalesLineItem({
+          ...item,
+          ...product,
+        });
+        return calculated;
+      }),
+    );
+    return items;
+  };
+
+  useEffect(() => {
+    if (!orderId) return;
+    const fetchOrderById = async () => {
+      const order = await getSalesOrderById(orderId);
+      if (order) {
+        setDateTime(formatDateTime(order.createdAt));
+        setCustomer((await getCustomerById(order.customerId)) as Customer);
+        const items = await fetchOrderItems(order);
+        setSalesBillItems(items);
+      } else setSalesBillItems([]);
+    };
+    fetchOrderById();
+  }, [orderId, setSalesBillItems, setCustomer]);
+
+  useEffect(() => {
+    if (orderId) return;
+    const interval = setInterval(() => {
+      setDateTime(formatDateTime(undefined, true));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [orderId]);
 
   return (
     <SafeAreaProvider style={{ backgroundColor }}>
@@ -155,7 +210,7 @@ const SalesBill = (props: SalesBillProps) => {
                   fontFamily: "manrope",
                 }}
               >
-                New Bill
+                {orderId ? "Edit Bill" : "New Bill"}
               </ThemedText>
             </View>
             <ThemedText

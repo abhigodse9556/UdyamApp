@@ -4,17 +4,30 @@ import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Customer, getCustomerById } from "@/services/customer";
 import { SalesOrder } from "@/services/salesOrder";
 import { formatDateTime } from "@/utils/date";
-import React, { useEffect, useMemo, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Menu } from "react-native-paper";
 
 type SalesLedgerCardProps = {
   ledgerData: SalesOrder;
-  onPress?: () => void;
+  onEdit: (currentLedgerId: SalesOrder["id"]) => void;
 };
 const SalesLedgerCard = (props: SalesLedgerCardProps) => {
-  const { ledgerData, onPress } = props;
+  const { ledgerData, onEdit } = props;
   const [status, setStatus] = useState("");
   const [customer, setCustomer] = useState<Customer>({} as Customer);
+  const [showMoreActions, setShowMoreActions] = useState(false);
+
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(-10)).current;
+
   const isPaid = useMemo(
     () => ledgerData.netAmount === ledgerData.paidAmount,
     [ledgerData],
@@ -35,6 +48,45 @@ const SalesLedgerCard = (props: SalesLedgerCardProps) => {
     };
     fetchCustomer();
   }, [ledgerData.customerId]);
+
+  useEffect(() => {
+    if (showMoreActions) {
+      Animated.parallel([
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: showMoreActions ? 0 : -10,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      Animated.parallel([
+        Animated.timing(opacityAnim, {
+          toValue: 0,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 0.8,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: showMoreActions ? -10 : 0,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [showMoreActions, opacityAnim, scaleAnim, translateY]);
 
   return (
     <ThemedView
@@ -134,15 +186,69 @@ const SalesLedgerCard = (props: SalesLedgerCardProps) => {
               darkColor="#25D366"
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.moreAction}>
-            <IconSymbol
-              type="MaterialIcons"
-              name="more-vert"
-              size={20}
-              lightColor="#49454F"
-              darkColor="#49454F"
+          <Menu
+            visible={showMoreActions}
+            onDismiss={() => setShowMoreActions(false)}
+            anchor={
+              <TouchableOpacity
+                style={styles.moreAction}
+                onPress={() => setShowMoreActions(true)}
+              >
+                <IconSymbol
+                  type="MaterialIcons"
+                  name="more-vert"
+                  size={20}
+                  lightColor="#49454F"
+                  darkColor="#49454F"
+                />
+              </TouchableOpacity>
+            }
+            contentStyle={styles.menuContainer}
+          >
+            {/* Edit */}
+            <Menu.Item
+              onPress={() => {
+                setShowMoreActions(false);
+                onEdit(ledgerData.id);
+              }}
+              leadingIcon={() => (
+                <IconSymbol
+                  type="MaterialIcons"
+                  name="edit"
+                  size={18}
+                  lightColor="#005FB8"
+                  darkColor="#005FB8"
+                />
+              )}
+              title={
+                <View style={styles.menuItem}>
+                  <ThemedText style={styles.menuText}>Edit</ThemedText>
+                </View>
+              }
             />
-          </TouchableOpacity>
+
+            {/* Delete */}
+            <Menu.Item
+              onPress={() => {
+                setShowMoreActions(false);
+                // call delete
+              }}
+              leadingIcon={() => (
+                <IconSymbol
+                  type="Ionicons"
+                  name="trash-outline"
+                  size={18}
+                  lightColor="#B3261E"
+                  darkColor="#B3261E"
+                />
+              )}
+              title={
+                <View style={styles.menuItem}>
+                  <ThemedText style={styles.menuText}>Delete</ThemedText>
+                </View>
+              }
+            />
+          </Menu>
         </View>
       </View>
     </ThemedView>
@@ -174,7 +280,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 12,
-    // backgroundColor: "#F3F4F6",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 16,
@@ -188,7 +293,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   invoiceBadge: {
-    // backgroundColor: "#E5E7EB",
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 4,
@@ -197,7 +301,6 @@ const styles = StyleSheet.create({
   invoiceText: {
     fontSize: 10,
     fontWeight: "700",
-    // color: "#4B5563",
   },
   statusDot: {
     width: 6,
@@ -213,12 +316,10 @@ const styles = StyleSheet.create({
   customerName: {
     fontSize: 18,
     fontWeight: "700",
-    // color: "#1C1B1F",
   },
   dateText: {
     fontSize: 12,
     fontWeight: "500",
-    // color: "#49454F",
   },
   footerRow: {
     flexDirection: "row",
@@ -231,17 +332,16 @@ const styles = StyleSheet.create({
   amountLabel: {
     fontSize: 10,
     fontWeight: "700",
-    // color: "#938F99",
     letterSpacing: 1,
   },
   amountValue: {
     fontSize: 20,
     fontWeight: "800",
-    // color: "#1C1B1F",
   },
   actionContainer: {
     flexDirection: "row",
     gap: 8,
+    alignItems: "center",
   },
   shareAction: {
     width: 40,
@@ -258,6 +358,34 @@ const styles = StyleSheet.create({
     backgroundColor: "#F3F4F6",
     alignItems: "center",
     justifyContent: "center",
+  },
+  moreActionsContainer: {
+    position: "absolute",
+    top: -75,
+    left: 0,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
+    gap: 8,
+    padding: 8,
+    backgroundColor: "#ffffff",
+  },
+  menuContainer: {
+    borderRadius: 12,
+    paddingVertical: 4,
+    backgroundColor: "#F3F4F6",
+  },
+
+  menuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: 70,
+  },
+  menuText: {
+    fontSize: 16,
+    color: "#1C1B1F",
   },
 });
 

@@ -77,19 +77,8 @@ export const getSalesOrderById = async (
   id: string,
 ): Promise<SalesOrder | null> => {
   const saleSalesOrders = await getAllSalesOrders();
-  return saleSalesOrders?.find((p) => p.id === id) || null;
+  return saleSalesOrders?.find((o) => o.id === id) || null;
 };
-
-// export const getSalesOrdersByName = async (
-//   name: string,
-// ): Promise<SalesOrder[] | null> => {
-//   const saleSalesOrders = await getAllSalesOrders();
-//   return (
-//     saleSalesOrders?.filter((p) =>
-//       p.name.toLowerCase().includes(name.toLowerCase()),
-//     ) || null
-//   );
-// };
 
 // Update saleSalesOrder
 export const updateSalesOrder = async (data: Partial<SalesOrder>) => {
