@@ -59,7 +59,9 @@ const SalesScreen = () => {
 
   const onCloseSalesBillModal = useCallback(
     (createNew: boolean = false) => {
-      if (createNew) fetchSalesOrders();
+      if (createNew) {
+        fetchSalesOrders();
+      }
       setOpenSalesBillModal(false);
       setCurrentOrderId("");
     },

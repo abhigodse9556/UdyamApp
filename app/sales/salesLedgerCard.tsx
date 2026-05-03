@@ -4,7 +4,14 @@ import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Customer, getCustomerById } from "@/services/customer";
 import { SalesOrder } from "@/services/salesOrder";
 import { formatDateTime } from "@/utils/date";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Animated,
   StyleSheet,
@@ -41,13 +48,14 @@ const SalesLedgerCard = (props: SalesLedgerCardProps) => {
     }
   }, [isPaid]);
 
-  useEffect(() => {
-    const fetchCustomer = async () => {
-      const customer = await getCustomerById(ledgerData.customerId);
-      setCustomer(customer || ({} as Customer));
-    };
-    fetchCustomer();
+  const fetchCustomer = useCallback(async () => {
+    const customer = await getCustomerById(ledgerData.customerId);
+    setCustomer(customer || ({} as Customer));
   }, [ledgerData.customerId]);
+
+  useFocusEffect(() => {
+    fetchCustomer();
+  });
 
   useEffect(() => {
     if (showMoreActions) {
