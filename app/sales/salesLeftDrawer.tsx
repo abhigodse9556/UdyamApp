@@ -39,6 +39,7 @@ const SalesLeftDrawer = (props: leftDrawerProps) => {
         onPress={() => setShowConfirm(true)}
         darkColor="red"
         lightColor="red"
+        titleColor="#ffffff"
       />
       <Confirm
         visible={showConfirm}
@@ -50,6 +51,7 @@ const SalesLeftDrawer = (props: leftDrawerProps) => {
           onClose();
         }}
         onCancel={() => setShowConfirm(false)}
+        type="danger"
       />
     </ThemedView>
   );

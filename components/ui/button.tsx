@@ -6,6 +6,7 @@ import { ThemedView } from "../themed-view";
 type ButtonProps = {
   title: string;
   onPress: () => void;
+  titleColor?: string;
   lightColor?: string;
   darkColor?: string;
   disabled?: boolean;
@@ -19,6 +20,7 @@ type ButtonProps = {
 const Button = (props: ButtonProps) => {
   const {
     title,
+    titleColor,
     onPress,
     lightColor = "#2196F3",
     darkColor = "#86c8ff",
@@ -50,8 +52,8 @@ const Button = (props: ButtonProps) => {
       >
         {leftIcon && <>{leftIcon}</>}
         <ThemedText
-          lightColor="#fff"
-          darkColor="#003063"
+          lightColor={titleColor || "#fff"}
+          darkColor={titleColor || "#003063"}
           style={[styles.customButtonText, titleStyle]}
         >
           {title}
@@ -84,7 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   customButtonText: {
-    color: "#fff",
+    // color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
