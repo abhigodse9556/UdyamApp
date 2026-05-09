@@ -1,8 +1,12 @@
+import OnlineRegistrationForm from "@/components/forms/onlineRegistrationForm";
 import RegistrationForm from "@/components/forms/registrationForm";
 import { Text } from "@react-navigation/elements";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { Button } from "react-native-paper";
 
 const Register = () => {
+  const [showForm, setShowForm] = useState("none"); // 'none' | 'online' | 'offline'
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -20,7 +24,38 @@ const Register = () => {
           else.
         </Text>
       </View>
-      <RegistrationForm />
+      {showForm === "offline" ? (
+        <RegistrationForm onClose={() => setShowForm("none")} />
+      ) : showForm === "online" ? (
+        <OnlineRegistrationForm onClose={() => setShowForm("none")} />
+      ) : (
+        <View>
+          <Button
+            mode="contained"
+            onPress={() => setShowForm("online")}
+            // style={styles.button}
+            // labelStyle={styles.buttonText}
+          >
+            Register Online
+          </Button>
+          <Button
+            mode="contained"
+            onPress={() => setShowForm("offline")}
+            // style={styles.button}
+            // labelStyle={styles.buttonText}
+          >
+            Use Offline
+          </Button>
+          <Button
+            mode="contained"
+            onPress={() => setShowForm("none")}
+            // style={styles.button}
+            // labelStyle={styles.buttonText}
+          >
+            Learn More About UdayamApp&#39;s Online Vs Offline Features
+          </Button>
+        </View>
+      )}
     </View>
   );
 };

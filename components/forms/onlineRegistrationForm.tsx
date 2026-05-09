@@ -1,24 +1,25 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
+import { graphqlRequest } from "@/services/graphql/client";
+import { CREATE_USER, User } from "@/services/graphql/user";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { saveShopOwner, updateShopOwner } from "../../services/shopOwner";
 
 type registrationData = {
   registeredData?: {
     id: string;
     name: string;
-    shopName: string;
-    phone: string;
-    address?: string;
+    email: string;
+    mobile: string;
+    password?: string;
   };
   isEditMode?: boolean;
   onClose?: (updated: boolean) => void;
 };
 
-const RegistrationForm = ({
+const OnlineRegistrationForm = ({
   registeredData,
   isEditMode,
   onClose,
@@ -26,19 +27,21 @@ const RegistrationForm = ({
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: registeredData?.name || "",
-    shopName: registeredData?.shopName || "",
-    phone: registeredData?.phone || "",
-    address: registeredData?.address || "",
+    email: registeredData?.email || "",
+    mobile: registeredData?.mobile || "",
+    password: "",
   });
   const [errorState, setErrorState] = useState({
     name: "",
-    shopName: "",
-    phone: "",
+    email: "",
+    mobile: "",
+    password: "",
   });
   const [touched, setTouched] = useState({
     name: false,
-    shopName: false,
-    phone: false,
+    email: false,
+    mobile: false,
+    password: false,
   });
 
   const validateField = (field: string, value: string) => {
@@ -60,6 +63,14 @@ const RegistrationForm = ({
       }
     }
 
+    if (field === "password") {
+      if (value.trim() === "") {
+        error = "Password is required";
+      } else if (value.length < 6) {
+        error = "Password must be at least 6 characters";
+      }
+    }
+
     setErrorState((prev) => ({
       ...prev,
       [field]: error,
@@ -67,45 +78,46 @@ const RegistrationForm = ({
   };
 
   const isFormValid = () => {
-    return !errorState.name && !errorState.shopName && !errorState.phone;
+    return (
+      !errorState.name &&
+      !errorState.email &&
+      !errorState.mobile &&
+      !errorState.password
+    );
   };
 
-  const generateId = () => {
-    const shopNamePart = formData.shopName
-      .replace(/\s+/g, "")
-      .toUpperCase()
-      .slice(0, 1);
-    const namePart = formData.name
-      .replace(/\s+/g, "")
-      .toUpperCase()
-      .slice(0, 1);
-    const phonePart = formData.phone.slice(8, 10);
-    return `UA-${shopNamePart}${namePart}${phonePart}`;
+  const handleCreateUser = async (userdata?: User) => {
+    const response = await graphqlRequest(CREATE_USER, {
+      ...userdata,
+    });
+
+    console.log(JSON.stringify(response, null, 0));
+
+    return response;
   };
+
   const handleRegister = async (isEditMode?: boolean) => {
     if (!isFormValid()) {
       return;
     }
     if (!isEditMode) {
-      const newOwner = {
-        id: generateId(),
+      const newUser = {
         name: formData.name,
-        shopName: formData.shopName,
-        phone: formData.phone,
-        address: formData.address,
+        email: formData.email,
+        mobile: formData.mobile || "9090909090",
+        password: formData.password,
       };
 
-      await saveShopOwner(newOwner);
+      await handleCreateUser(newUser);
 
-      router.replace("/(tabs)");
+      router.replace("/login");
     } else {
-      await updateShopOwner({
-        id: registeredData?.id,
-        name: formData.name,
-        shopName: formData.shopName,
-        phone: formData.phone,
-        address: formData.address,
-      });
+      // await updateShopOwner({
+      //   id: registeredData?.id,
+      //   name: formData.name,
+      //   email: formData.email,
+      //   mobile: formData.mobile,
+      // });
 
       onClose?.(true);
     }
@@ -128,7 +140,7 @@ const RegistrationForm = ({
     >
       <View style={styles.formContainer}>
         <Input
-          label="Name"
+          label="Your Name"
           value={formData.name}
           onChangeText={(text) => {
             setFormData((prev) => ({ ...prev, name: text }));
@@ -141,38 +153,41 @@ const RegistrationForm = ({
           error={errorState.name}
         />
         <Input
-          label="Shop Name"
-          value={formData.shopName}
+          label="Email"
+          value={formData.email}
           onChangeText={(text) => {
-            setFormData((prev) => ({ ...prev, shopName: text }));
-            validateField("shopName", text);
+            setFormData((prev) => ({ ...prev, email: text }));
+            validateField("email", text);
           }}
-          onBlur={() => setTouched((prev) => ({ ...prev, shopName: true }))}
-          touched={touched.shopName}
+          onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
+          touched={touched.email}
           autoCapitalize="words"
           required
-          error={errorState.shopName}
+          error={errorState.email}
         />
         <Input
-          label="Phone"
-          value={formData.phone}
+          label="Contact Number"
+          value={formData.mobile}
           onChangeText={(text) => {
             handlePhoneChange(text);
-            validateField("phone", text);
+            validateField("mobile", text);
           }}
-          onBlur={() => setTouched((prev) => ({ ...prev, phone: true }))}
-          touched={touched.phone}
+          onBlur={() => setTouched((prev) => ({ ...prev, mobile: true }))}
+          touched={touched.mobile}
           keyboardType="number-pad"
           maxLength={10}
           required
-          error={errorState.phone}
+          error={errorState.mobile}
         />
         <Input
-          label="Address"
-          value={formData.address}
+          label="Password"
+          value={formData.password}
           onChangeText={(text) =>
-            setFormData((prev) => ({ ...prev, address: text }))
+            setFormData((prev) => ({ ...prev, password: text }))
           }
+          secureTextEntry
+          error={errorState.password}
+          required
         />
       </View>
       <View style={styles.btnContainer}>
@@ -190,9 +205,9 @@ const RegistrationForm = ({
             } else {
               setFormData({
                 name: "",
-                shopName: "",
-                phone: "",
-                address: "",
+                email: "",
+                mobile: "",
+                password: "",
               });
               onClose?.(false);
             }
@@ -220,4 +235,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegistrationForm;
+export default OnlineRegistrationForm;

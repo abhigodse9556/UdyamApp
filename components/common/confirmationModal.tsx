@@ -1,4 +1,4 @@
-import Checkbox from "expo-checkbox";
+import { Checkbox } from "expo-checkbox";
 import React, { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ThemedText } from "../themed-text";
