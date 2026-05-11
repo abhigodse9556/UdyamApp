@@ -93,4 +93,6 @@ const styles = StyleSheet.create({
   },
 });
 
+/** @deprecated use PaperButton instead */
+
 export default Button;

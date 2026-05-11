@@ -113,6 +113,8 @@ const Input = ({
   );
 };
 
+/** @deprecated use PaperInput instead */
+
 export default Input;
 
 const styles = StyleSheet.create({

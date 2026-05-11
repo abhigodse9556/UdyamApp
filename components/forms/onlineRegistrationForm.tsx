@@ -1,11 +1,12 @@
-import Button from "@/components/ui/button";
-import Input from "@/components/ui/input";
 import { graphqlRequest } from "@/services/graphql/client";
 import { CREATE_USER, User } from "@/services/graphql/user";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import PaperButton from "../ui/paperButton";
+import PaperInput from "../ui/paperInput";
+import StoreForm from "./storeForm";
 
 type registrationData = {
   registeredData?: {
@@ -31,18 +32,15 @@ const OnlineRegistrationForm = ({
     mobile: registeredData?.mobile || "",
     password: "",
   });
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errorState, setErrorState] = useState({
     name: "",
     email: "",
     mobile: "",
     password: "",
+    confirmPassword: "",
   });
-  const [touched, setTouched] = useState({
-    name: false,
-    email: false,
-    mobile: false,
-    password: false,
-  });
+  const [showStoreForm, setShowStoreForm] = useState(false);
 
   const validateField = (field: string, value: string) => {
     let error = "";
@@ -71,6 +69,14 @@ const OnlineRegistrationForm = ({
       }
     }
 
+    if (field === "confirmPassword") {
+      if (value.trim() === "") {
+        error = "Confirm Password is required";
+      } else if (value !== formData.password) {
+        error = "Passwords do not match";
+      }
+    }
+
     setErrorState((prev) => ({
       ...prev,
       [field]: error,
@@ -82,7 +88,8 @@ const OnlineRegistrationForm = ({
       !errorState.name &&
       !errorState.email &&
       !errorState.mobile &&
-      !errorState.password
+      !errorState.password &&
+      !errorState.confirmPassword
     );
   };
 
@@ -90,8 +97,6 @@ const OnlineRegistrationForm = ({
     const response = await graphqlRequest(CREATE_USER, {
       ...userdata,
     });
-
-    console.log(JSON.stringify(response, null, 0));
 
     return response;
   };
@@ -125,7 +130,7 @@ const OnlineRegistrationForm = ({
 
   const handlePhoneChange = (text: string) => {
     const numericValue = text.replace(/[^0-9]/g, "");
-    setFormData((prev) => ({ ...prev, phone: numericValue }));
+    setFormData((prev) => ({ ...prev, mobile: numericValue }));
   };
   return (
     <KeyboardAwareScrollView
@@ -138,84 +143,100 @@ const OnlineRegistrationForm = ({
       extraScrollHeight={20}
       keyboardOpeningTime={0}
     >
-      <View style={styles.formContainer}>
-        <Input
-          label="Your Name"
-          value={formData.name}
-          onChangeText={(text) => {
-            setFormData((prev) => ({ ...prev, name: text }));
-            validateField("name", text);
-          }}
-          onBlur={() => setTouched((prev) => ({ ...prev, name: true }))}
-          touched={touched.name}
-          autoCapitalize="words"
-          required
-          error={errorState.name}
-        />
-        <Input
-          label="Email"
-          value={formData.email}
-          onChangeText={(text) => {
-            setFormData((prev) => ({ ...prev, email: text }));
-            validateField("email", text);
-          }}
-          onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
-          touched={touched.email}
-          autoCapitalize="words"
-          required
-          error={errorState.email}
-        />
-        <Input
-          label="Contact Number"
-          value={formData.mobile}
-          onChangeText={(text) => {
-            handlePhoneChange(text);
-            validateField("mobile", text);
-          }}
-          onBlur={() => setTouched((prev) => ({ ...prev, mobile: true }))}
-          touched={touched.mobile}
-          keyboardType="number-pad"
-          maxLength={10}
-          required
-          error={errorState.mobile}
-        />
-        <Input
-          label="Password"
-          value={formData.password}
-          onChangeText={(text) =>
-            setFormData((prev) => ({ ...prev, password: text }))
-          }
-          secureTextEntry
-          error={errorState.password}
-          required
-        />
-      </View>
-      <View style={styles.btnContainer}>
-        <Button
-          title={isEditMode ? "Save Changes" : "Register"}
-          onPress={() => handleRegister(isEditMode)}
-          lightColor="blue"
-          darkColor="blue"
-        />
-        <Button
-          title="Cancel"
-          onPress={() => {
-            if (isEditMode) {
-              onClose?.(false);
-            } else {
-              setFormData({
-                name: "",
-                email: "",
-                mobile: "",
-                password: "",
-              });
-              onClose?.(false);
-            }
-          }}
-          lightColor="gray"
-          darkColor="gray"
-        />
-      </View>
+      {!showStoreForm ? (
+        <>
+          <View style={styles.formContainer}>
+            <PaperInput
+              label="Your Name"
+              value={formData.name}
+              onChangeText={(text) => {
+                setFormData((prev) => ({ ...prev, name: text }));
+                validateField("name", text);
+              }}
+              autoCapitalize="words"
+              required
+              error={errorState.name ? true : false}
+            />
+            <PaperInput
+              label="Email"
+              value={formData.email}
+              onChangeText={(text) => {
+                setFormData((prev) => ({ ...prev, email: text }));
+                validateField("email", text);
+              }}
+              autoCapitalize="words"
+              required
+              error={errorState.email ? true : false}
+              keyboardType="email-address"
+            />
+            <PaperInput
+              label="Contact Number"
+              value={formData.mobile}
+              onChangeText={(text) => {
+                handlePhoneChange(text);
+                validateField("mobile", text);
+              }}
+              keyboardType="number-pad"
+              maxLength={10}
+              required
+              error={errorState.mobile ? true : false}
+            />
+            <PaperInput
+              label="Password"
+              value={formData.password}
+              onChangeText={(text) => {
+                setFormData((prev) => ({ ...prev, password: text }));
+                validateField("password", text);
+              }}
+              passwordField={true}
+              error={errorState.password ? true : false}
+              required
+            />
+            <PaperInput
+              label="Confirm Password"
+              value={confirmPassword}
+              onChangeText={(text) => {
+                setConfirmPassword(text);
+                validateField("confirmPassword", text);
+              }}
+              passwordField={true}
+              error={errorState.confirmPassword ? true : false}
+              required
+            />
+          </View>
+          <View style={styles.btnContainer}>
+            <PaperButton
+              title="Cancel"
+              mode="outlined"
+              onPress={() => {
+                if (isEditMode) {
+                  onClose?.(false);
+                } else {
+                  setFormData({
+                    name: "",
+                    email: "",
+                    mobile: "",
+                    password: "",
+                  });
+                  onClose?.(false);
+                }
+              }}
+            />
+            <PaperButton
+              title={isEditMode ? "Save Changes" : "Register"}
+              mode="contained"
+              onPress={() => handleRegister(isEditMode)}
+            />
+            <PaperButton
+              title="Next"
+              mode="contained-tonal"
+              onPress={() => setShowStoreForm(true)}
+            />
+          </View>
+        </>
+      ) : (
+        <StoreForm userId="USER0001" />
+      )}
     </KeyboardAwareScrollView>
   );
 };

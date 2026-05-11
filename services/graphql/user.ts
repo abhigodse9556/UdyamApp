@@ -62,6 +62,24 @@ export const LOGIN_USER = `
   }
 `;
 
+export const REFRESH_SESSION = `
+  mutation RefreshSession(
+    $refreshToken: String!
+  ) {
+    refreshSession(
+      refreshToken: $refreshToken
+    ) {
+        user {
+            email
+            name
+            id
+          }
+      accessToken
+      refreshToken
+    }
+  }
+`;
+
 export const UPDATE_USER = `
   mutation UpdateUser(
     $id: String!
@@ -84,3 +102,27 @@ export const UPDATE_USER = `
     }
   }
 `;
+
+export type LoginUserResponse = {
+  loginUser: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+    accessToken: string;
+    refreshToken: string;
+  };
+};
+
+export type RefreshSessionResponse = {
+  refreshSession: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+    accessToken: string;
+    refreshToken: string;
+  };
+};

@@ -1,9 +1,10 @@
 import OnlineRegistrationForm from "@/components/forms/onlineRegistrationForm";
 import RegistrationForm from "@/components/forms/registrationForm";
+import PaperButton from "@/components/ui/paperButton";
 import { Text } from "@react-navigation/elements";
+import { router } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button } from "react-native-paper";
 
 const Register = () => {
   const [showForm, setShowForm] = useState("none"); // 'none' | 'online' | 'offline'
@@ -29,31 +30,30 @@ const Register = () => {
       ) : showForm === "online" ? (
         <OnlineRegistrationForm onClose={() => setShowForm("none")} />
       ) : (
-        <View>
-          <Button
+        <View style={styles.buttonContainer}>
+          <PaperButton
             mode="contained"
             onPress={() => setShowForm("online")}
-            // style={styles.button}
-            // labelStyle={styles.buttonText}
-          >
-            Register Online
-          </Button>
-          <Button
+            title="Register With Us"
+          />
+          <PaperButton
+            mode="outlined"
+            onPress={() => router.replace("/login")}
+            title="Already Have An Account? Login"
+          />
+          {/* <Button
             mode="contained"
             onPress={() => setShowForm("offline")}
             // style={styles.button}
             // labelStyle={styles.buttonText}
           >
             Use Offline
-          </Button>
-          <Button
-            mode="contained"
+          </Button> */}
+          <PaperButton
+            mode="text"
             onPress={() => setShowForm("none")}
-            // style={styles.button}
-            // labelStyle={styles.buttonText}
-          >
-            Learn More About UdayamApp&#39;s Online Vs Offline Features
-          </Button>
+            title="Learn More About UdayamApp&#39;s Features"
+          />
         </View>
       )}
     </View>
@@ -107,6 +107,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9f9f9",
     padding: 15,
     borderRadius: 10,
+  },
+  buttonContainer: {
+    gap: 16,
+    justifyContent: "center",
   },
 });
 
