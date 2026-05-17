@@ -4,6 +4,7 @@ import PaperInput from "@/components/ui/paperInput";
 import { graphqlRequest } from "@/services/graphql/client";
 import { LOGIN_USER, LoginUserResponse } from "@/services/graphql/user";
 import { saveTokens } from "@/services/token.service";
+import * as Device from "expo-device";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -17,6 +18,14 @@ const LoginPage = () => {
   });
   const [visible, setVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const deviceInfo = {
+    brand: Device.brand,
+    deviceName: Device.deviceName,
+    manufacturer: Device.manufacturer,
+    modelName: Device.modelName,
+    osName: Device.osName,
+    osVersion: Device.osVersion,
+  };
   const handleLoginUser = async () => {
     if (!formData.email || !formData.password) {
       setSnackbarMessage("Please fill in all fields");
@@ -25,8 +34,9 @@ const LoginPage = () => {
     }
     try {
       const response = await graphqlRequest<LoginUserResponse>(LOGIN_USER, {
-        email: formData?.email,
+        emailOrUserName: formData?.email,
         password: formData?.password,
+        deviceInfo: JSON.stringify(deviceInfo),
       });
 
       if (
@@ -41,7 +51,7 @@ const LoginPage = () => {
         router.replace("/(tabs)");
       }
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error logging in:", error);
       if (error instanceof Error) {
         let message = "";
         switch (error.message) {

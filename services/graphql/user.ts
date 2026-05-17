@@ -2,6 +2,7 @@ export type User = {
   id?: string;
   name: string;
   email: string;
+  userName: string;
   mobile: string;
   password?: string;
 };
@@ -12,6 +13,7 @@ export const GET_USERS = `
       id
       name
       email
+      userName
       mobile
       stores {
         id
@@ -31,12 +33,14 @@ export const CREATE_USER = `
     createUser(
       name: $name
       email: $email
+      userName: $userName
       mobile: $mobile
       password: $password
     ) {
       id
       name
       email
+      userName
       mobile
     }
   }
@@ -44,17 +48,20 @@ export const CREATE_USER = `
 
 export const LOGIN_USER = `
   mutation LoginUser(
-    $email: String!
+    $emailOrUserName: String!
     $password: String!
+    $deviceInfo: String
   ) {
     loginUser(
-      email: $email
+      emailOrUserName: $emailOrUserName
       password: $password
+      deviceInfo: $deviceInfo
     ) {
         user {
-            email
-            name
             id
+            name
+            email
+            userName
           }
       accessToken
       refreshToken
@@ -72,6 +79,7 @@ export const REFRESH_SESSION = `
         user {
             email
             name
+            userName
             id
           }
       accessToken
@@ -85,6 +93,7 @@ export const UPDATE_USER = `
     $id: String!
     $name: String
     $email: String
+    $userName: String
     $mobile: String
     $password: String                                                                   
   ) {
@@ -92,15 +101,23 @@ export const UPDATE_USER = `
       id: $id
       name: $name
       email: $email
+      userName: $userName
       mobile: $mobile
       password: $password
     ) {
       id
       name
       email
+      userName
       mobile
     }
   }
+`;
+
+export const LOGOUT_USER = `
+mutation LogoutUser($refreshToken: String!) {
+  logoutUser(refreshToken: $refreshToken)
+}
 `;
 
 export type LoginUserResponse = {
@@ -109,6 +126,7 @@ export type LoginUserResponse = {
       id: string;
       name: string;
       email: string;
+      userName: string;
     };
     accessToken: string;
     refreshToken: string;
@@ -121,6 +139,7 @@ export type RefreshSessionResponse = {
       id: string;
       name: string;
       email: string;
+      userName: string;
     };
     accessToken: string;
     refreshToken: string;

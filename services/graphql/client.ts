@@ -1,4 +1,4 @@
-const GRAPHQL_URL = "http://10.136.35.1:4000/graphql";
+const GRAPHQL_URL = `${process.env.EXPO_PUBLIC_GRAPHQL_BACKEND_URL}`;
 
 type GraphQLResponse<T> = {
   data?: T;

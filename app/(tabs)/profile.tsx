@@ -4,10 +4,14 @@ import RegistrationForm from "@/components/forms/registrationForm";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import Button from "@/components/ui/button";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import PaperButton from "@/components/ui/paperButton";
 import { Fonts } from "@/constants/theme";
-import { clearShopOwner, getShopOwner } from "@/services/shopOwner";
+import { graphqlRequest } from "@/services/graphql/client";
+import { LOGOUT_USER } from "@/services/graphql/user";
+import { getShopOwner } from "@/services/shopOwner";
+import { clearTokens, getRefreshToken } from "@/services/token.service";
+import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 
 const Profile = () => {
@@ -30,6 +34,24 @@ const Profile = () => {
       address: owner?.address || "",
     });
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      const refreshToken = await getRefreshToken();
+
+      if (refreshToken) {
+        await graphqlRequest(LOGOUT_USER, { refreshToken });
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    } finally {
+      // ALWAYS clear local auth
+      await clearTokens();
+
+      router.replace("/login");
+    }
+  };
+
   useEffect(() => {
     fetchShopOwner();
   }, [fetchShopOwner]);
@@ -98,18 +120,19 @@ const Profile = () => {
           </ThemedView>
 
           <ThemedView style={styles.btnContainer}>
-            <Button
+            <PaperButton
               title="Edit Profile"
               onPress={() => {
                 setIsEditing(true);
               }}
+              mode="contained"
             />
-            <Button
+            <PaperButton
               title="Logout"
               onPress={() => {
-                clearShopOwner();
+                handleLogout();
               }}
-              lightColor="red"
+              mode="contained"
             />
           </ThemedView>
         </ParallaxScrollView>

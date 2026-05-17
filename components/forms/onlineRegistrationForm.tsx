@@ -1,7 +1,7 @@
 import { graphqlRequest } from "@/services/graphql/client";
 import { CREATE_USER, User } from "@/services/graphql/user";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import PaperButton from "../ui/paperButton";
@@ -13,6 +13,7 @@ type registrationData = {
     id: string;
     name: string;
     email: string;
+    userName: string;
     mobile: string;
     password?: string;
   };
@@ -29,6 +30,7 @@ const OnlineRegistrationForm = ({
   const [formData, setFormData] = useState({
     name: registeredData?.name || "",
     email: registeredData?.email || "",
+    userName: registeredData?.userName || "",
     mobile: registeredData?.mobile || "",
     password: "",
   });
@@ -77,6 +79,15 @@ const OnlineRegistrationForm = ({
       }
     }
 
+    if (formData.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setErrorState((prev) => ({ ...prev, email: "Invalid email format" }));
+      } else {
+        setErrorState((prev) => ({ ...prev, email: "" }));
+      }
+    }
+
     setErrorState((prev) => ({
       ...prev,
       [field]: error,
@@ -109,6 +120,7 @@ const OnlineRegistrationForm = ({
       const newUser = {
         name: formData.name,
         email: formData.email,
+        userName: formData.userName,
         mobile: formData.mobile || "9090909090",
         password: formData.password,
       };
@@ -132,6 +144,14 @@ const OnlineRegistrationForm = ({
     const numericValue = text.replace(/[^0-9]/g, "");
     setFormData((prev) => ({ ...prev, mobile: numericValue }));
   };
+
+  useEffect(() => {
+    if (formData.email) {
+      const user_name = formData.email.split("@")[0];
+      setFormData((prev) => ({ ...prev, userName: user_name }));
+    }
+  }, [formData.email]);
+
   return (
     <KeyboardAwareScrollView
       style={{ flex: 1 }}
@@ -215,6 +235,7 @@ const OnlineRegistrationForm = ({
                   setFormData({
                     name: "",
                     email: "",
+                    userName: "",
                     mobile: "",
                     password: "",
                   });
