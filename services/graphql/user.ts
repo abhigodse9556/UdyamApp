@@ -120,6 +120,24 @@ mutation LogoutUser($refreshToken: String!) {
 }
 `;
 
+export const CHECK_USERNAME_AVAILABILITY = `
+  mutation IsUserNameAvailable($userName: String!) {
+    isUserNameAvailable(userName: $userName)
+  }
+`;
+
+export const CHECK_EMAIL_AVAILABILITY = `
+  mutation IsEmailAvailable($email: String!) {
+    isEmailAvailable(email: $email)
+  }
+`;
+
+export const CHECK_MOBILE_AVAILABILITY = `
+  mutation IsMobileAvailable($mobile: String!) {
+    isMobileAvailable(mobile: $mobile)
+  }
+`;
+
 export type LoginUserResponse = {
   loginUser: {
     user: {
@@ -144,4 +162,14 @@ export type RefreshSessionResponse = {
     accessToken: string;
     refreshToken: string;
   };
+};
+
+export type CheckUserNameAvailabilityResponse = {
+  isUserNameAvailable: boolean;
+};
+export type CheckEmailAvailabilityResponse = {
+  isEmailAvailable: boolean;
+};
+export type CheckMobileAvailabilityResponse = {
+  isMobileAvailable: boolean;
 };

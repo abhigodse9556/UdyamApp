@@ -29,11 +29,8 @@ export default function RootLayout() {
           <Stack.Screen name="login" options={{ headerShown: false }} />
           {/* Tabs */}
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          {/* Modal */}
-          <Stack.Screen
-            name="modal"
-            options={{ presentation: "modal", title: "Modal" }}
-          />
+          {/* Store Register screen */}
+          <Stack.Screen name="store" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
       </PaperProvider>

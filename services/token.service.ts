@@ -1,4 +1,5 @@
 import * as SecureStore from "expo-secure-store";
+import { Store } from "./graphql/store";
 
 const ACCESS_TOKEN_KEY = "access_token";
 const REFRESH_TOKEN_KEY = "refresh_token";
@@ -32,6 +33,13 @@ export async function clearTokens() {
   await SecureStore.deleteItemAsync(ACCESS_TOKEN_KEY);
 
   await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
-
-  await SecureStore.deleteItemAsync(USER_ID_KEY);
 }
+
+export const saveStoreDetails = async (storeDetails: Store) => {
+  await SecureStore.setItemAsync("store_details", JSON.stringify(storeDetails));
+};
+
+export const getStoreDetails = async (): Promise<Store | null> => {
+  const storeDetailsString = await SecureStore.getItemAsync("store_details");
+  return storeDetailsString ? JSON.parse(storeDetailsString) : null;
+};

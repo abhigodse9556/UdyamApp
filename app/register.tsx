@@ -1,5 +1,4 @@
-import OnlineRegistrationForm from "@/components/forms/onlineRegistrationForm";
-import RegistrationForm from "@/components/forms/registrationForm";
+import UserForm from "@/components/forms/userForm";
 import PaperButton from "@/components/ui/paperButton";
 import { Text } from "@react-navigation/elements";
 import { router } from "expo-router";
@@ -7,7 +6,7 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 const Register = () => {
-  const [showForm, setShowForm] = useState("none"); // 'none' | 'online' | 'offline'
+  const [showUserForm, setShowUserForm] = useState("none"); // 'none' | 'online' | 'offline'
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -25,15 +24,13 @@ const Register = () => {
           else.
         </Text>
       </View>
-      {showForm === "offline" ? (
-        <RegistrationForm onClose={() => setShowForm("none")} />
-      ) : showForm === "online" ? (
-        <OnlineRegistrationForm onClose={() => setShowForm("none")} />
+      {showUserForm === "online" ? (
+        <UserForm onClose={() => setShowUserForm("none")} />
       ) : (
         <View style={styles.buttonContainer}>
           <PaperButton
             mode="contained"
-            onPress={() => setShowForm("online")}
+            onPress={() => setShowUserForm("online")}
             title="Register With Us"
           />
           <PaperButton
@@ -41,17 +38,9 @@ const Register = () => {
             onPress={() => router.replace("/login")}
             title="Already Have An Account? Login"
           />
-          {/* <Button
-            mode="contained"
-            onPress={() => setShowForm("offline")}
-            // style={styles.button}
-            // labelStyle={styles.buttonText}
-          >
-            Use Offline
-          </Button> */}
           <PaperButton
             mode="text"
-            onPress={() => setShowForm("none")}
+            onPress={() => setShowUserForm("none")}
             title="Learn More About UdayamApp&#39;s Features"
           />
         </View>
